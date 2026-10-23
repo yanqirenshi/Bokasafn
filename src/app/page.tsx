@@ -7,10 +7,6 @@ import styles from "./home.module.css";
 export default function Home() {
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Bókasafn</h1>
-        <p className={styles.subtitle}>古典の図書館 — 本棚に近づいて本を選んでください</p>
-      </header>
       <Suspense fallback={<p className={styles.loading}>本棚を準備しています…</p>}>
         <Shelves />
       </Suspense>

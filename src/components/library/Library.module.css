@@ -133,16 +133,6 @@
   color: var(--accent);
 }
 
-.hint {
-  position: absolute;
-  left: 16px;
-  bottom: 12px;
-  right: 16px;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  pointer-events: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .book {
     transition: none;

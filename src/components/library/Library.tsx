@@ -221,9 +221,6 @@ export function Library({
             全体
           </button>
         </div>
-        <p className={styles.hint}>
-          ホイールやピンチで拡大、床をドラッグで視点を移動。本棚はドラッグで動かせ、クリックすると近づきます。
-        </p>
       </div>
 
       {selected && <Inspector book={selected} onClose={() => setSelectedId(null)} />}
