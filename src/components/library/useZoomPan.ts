@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState, type RefObject } from "react"
 
 export type ViewBox = { x: number; y: number; w: number; h: number };
 
-const MIN_W = 140;
 const DRAG_THRESHOLD_PX = 5;
 const ANIMATION_MS = 380;
 
@@ -28,21 +27,10 @@ export function useZoomPan(svgRef: RefObject<SVGSVGElement | null>, home: ViewBo
   const gesture = useRef({ dragging: false, startX: 0, startY: 0, pinchDist: 0 });
   const dragged = useRef(false);
 
-  const maxW = home.w * 1.6;
-
-  const apply = useCallback(
-    (vb: ViewBox) => {
-      const scale = Math.min(Math.max(vb.w, MIN_W), maxW) / vb.w;
-      const cx = vb.x + vb.w / 2;
-      const cy = vb.y + vb.h / 2;
-      const w = vb.w * scale;
-      const h = vb.h * scale;
-      const next = { x: cx - w / 2, y: cy - h / 2, w, h };
-      current.current = next;
-      setViewBox(next);
-    },
-    [maxW],
-  );
+  const apply = useCallback((vb: ViewBox) => {
+    current.current = vb;
+    setViewBox(vb);
+  }, []);
 
   const stopAnimation = () => {
     if (animation.current != null) cancelAnimationFrame(animation.current);
@@ -54,11 +42,11 @@ export function useZoomPan(svgRef: RefObject<SVGSVGElement | null>, home: ViewBo
       stopAnimation();
       const vb = current.current;
       const p = at ?? { x: vb.x + vb.w / 2, y: vb.y + vb.h / 2 };
-      const w = Math.min(Math.max(vb.w * factor, MIN_W), maxW);
-      const f = w / vb.w;
-      apply({ x: p.x - (p.x - vb.x) * f, y: p.y - (p.y - vb.y) * f, w, h: vb.h * f });
+      // 倍率に上限・下限は設けない
+      const f = factor;
+      apply({ x: p.x - (p.x - vb.x) * f, y: p.y - (p.y - vb.y) * f, w: vb.w * f, h: vb.h * f });
     },
-    [apply, maxW],
+    [apply],
   );
 
   const animateTo = useCallback(

@@ -44,12 +44,6 @@ export function Library({ books }: { books: ShelfBook[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const selectBook = (c: Bookcase<ShelfBook>, book: ShelfBook) => {
-    setSelectedId(book.id);
-    // 遠くから選んだときは、その本棚まで寄る
-    if (viewBox.w > c.w * 2.5) animateTo(caseView(c));
-  };
-
   return (
     <div className={styles.library}>
       <div className={styles.stage}>
@@ -80,13 +74,8 @@ export function Library({ books }: { books: ShelfBook[] }) {
             </linearGradient>
           </defs>
 
-          <rect
-            className={styles.floor}
-            x={-layout.width}
-            y={-layout.height}
-            width={layout.width * 3}
-            height={layout.height * 3}
-          />
+          {/* ズームに制限がないので、床はどこまで引いても切れないよう十分に広くとる */}
+          <rect className={styles.floor} x={-1e7} y={-1e7} width={2e7} height={2e7} />
 
           {layout.cases.map((c) => (
             <BookcaseView
@@ -94,7 +83,7 @@ export function Library({ books }: { books: ShelfBook[] }) {
               bookcase={c}
               selectedId={selectedId}
               onZoom={() => !wasDragged() && animateTo(caseView(c))}
-              onSelect={(book) => !wasDragged() && selectBook(c, book)}
+              onSelect={(book) => !wasDragged() && setSelectedId(book.id)}
             />
           ))}
         </svg>
