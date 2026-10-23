@@ -1,0 +1,45 @@
+.switch {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.switch button {
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 2px 10px;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--paper-edge);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.switch button[aria-pressed="true"] {
+  color: var(--paper);
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+}
+
+.horizontal p,
+.vertical p {
+  white-space: pre-line;
+  font-size: 1.12rem;
+  line-height: 2;
+  margin-bottom: 1em;
+}
+
+.vertical {
+  writing-mode: vertical-rl;
+  height: 68vh;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+}
+
+.vertical p {
+  margin: 0 0 0 1.2em;
+  letter-spacing: 0.05em;
+}

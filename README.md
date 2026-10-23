@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bókasafn
 
-## Getting Started
+著作権の切れた古典を集めて読むための図書館アプリです。
+（Bókasafn はアイスランド語で「図書館」）
 
-First, run the development server:
+- 本棚に並んだ背表紙から本を選ぶと、見開きの本が開いて目次と本文を読めます。
+- 本文は横書きと縦書きを切り替えられます。
+- Next.js (App Router) と SQLite (better-sqlite3) で作っています。
+
+## 使い方
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run import   # 本を取り込む（data/bokasafn.db に保存）
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+一冊だけ取り込み直すときは slug を指定します。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run import -- shanghan-lun
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 収録書と取り込み元
 
-## Learn More
+ctext.org の「醫家」(https://ctext.org/chinese-medicine/zhs) にある書目を、中文版ウィキソース（維基文庫）から取り込んでいます。
+ctext.org はサイトのスクレイピングを利用規約で禁止しており、本文を取る公式 API も API キーが必要なためです。
 
-To learn more about Next.js, take a look at the following resources:
+| slug | 書名 |
+| --- | --- |
+| huangdi-neijing | 黃帝內經（素問・靈樞） |
+| nanjing | 難經 |
+| shennong-bencao-jing | 神農本草經 |
+| shanghan-lun | 傷寒論 |
+| jingui-yaolue | 金匱要略 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `BOOKS` に追加すれば増やせます。
+取得した HTML は `data/cache/` に保存し、再実行時はそれを使います。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 構成
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/lib/db.ts` — SQLite の接続とスキーマ（`books`, `sections`）
+- `src/lib/books.ts` — 画面から使うデータ取得関数
+- `src/app/page.tsx` — 本棚
+- `src/app/books/[slug]/page.tsx` — 本の扉と目次
+- `src/app/books/[slug]/[sectionId]/page.tsx` — 本文

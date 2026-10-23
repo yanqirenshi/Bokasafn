@@ -1,0 +1,23 @@
+.toc {
+  list-style: none;
+  line-height: 1.9;
+}
+
+.toc a:hover {
+  color: var(--accent);
+}
+
+.top {
+  margin-top: 0.4em;
+  font-weight: 600;
+}
+
+.current {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.current::before {
+  content: "▶ ";
+  font-size: 0.7em;
+}
