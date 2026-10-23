@@ -46,6 +46,28 @@ export async function listBooks(): Promise<Book[]> {
     .all() as Book[];
 }
 
+/** 本棚のインスペクターに出す情報（最初に読むセクションと、最上位の章立て）付きの本 */
+export type ShelfBook = Book & {
+  firstSectionId: number | null;
+  chapters: string[];
+};
+
+export async function listShelfBooks(): Promise<ShelfBook[]> {
+  const books = await listBooks();
+  const db = getDb();
+  const firstSection = db.prepare(
+    "SELECT id FROM sections WHERE book_id = ? AND LENGTH(body) > 0 ORDER BY position LIMIT 1",
+  );
+  const chapters = db.prepare(
+    "SELECT title FROM sections WHERE book_id = ? AND depth = 0 ORDER BY position",
+  );
+  return books.map((book) => ({
+    ...book,
+    firstSectionId: (firstSection.get(book.id) as { id: number } | undefined)?.id ?? null,
+    chapters: (chapters.all(book.id) as { title: string }[]).map((c) => c.title),
+  }));
+}
+
 export async function getBook(slug: string): Promise<Book | undefined> {
   await connection();
   return getDb()

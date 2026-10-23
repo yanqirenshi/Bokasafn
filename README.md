@@ -3,7 +3,8 @@
 著作権の切れた古典を集めて読むための図書館アプリです。
 （Bókasafn はアイスランド語で「図書館」）
 
-- 本棚に並んだ背表紙から本を選ぶと、見開きの本が開いて目次と本文を読めます。
+- 図書館の SVG に本棚が並び、ズームすると背表紙の書名が読めます。
+- 本を選ぶと右端のインスペクターに概要が出て、「読む」で本文を開けます。
 - 本文は横書きと縦書きを切り替えられます。
 - Next.js (App Router) と SQLite (better-sqlite3) で作っています。
 
@@ -41,6 +42,7 @@ ctext.org はサイトのスクレイピングを利用規約で禁止してお�
 
 - `src/lib/db.ts` — SQLite の接続とスキーマ（`books`, `sections`）
 - `src/lib/books.ts` — 画面から使うデータ取得関数
-- `src/app/page.tsx` — 本棚
+- `src/app/page.tsx` — 本棚（SVG。ズーム・パンでき、本を選ぶと右端のインスペクターに情報を出す）
+- `src/components/library/` — SVG の本棚・ズーム処理・インスペクター
 - `src/app/books/[slug]/page.tsx` — 本の扉と目次
 - `src/app/books/[slug]/[sectionId]/page.tsx` — 本文

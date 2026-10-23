@@ -1,0 +1,176 @@
+.inspector {
+  position: relative;
+  width: 360px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 28px 24px 32px;
+  background: var(--paper);
+  border-left: 1px solid var(--paper-edge);
+  box-shadow: -8px 0 24px var(--shadow);
+  animation: slide-in 0.25s ease-out;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  font-size: 1.3rem;
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--accent);
+  background: var(--paper-edge);
+}
+
+.cover {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+  height: 160px;
+  margin: 0 auto 20px;
+  padding: 14px 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.3), transparent 12%),
+    var(--cover);
+  border-radius: 2px 6px 6px 2px;
+  box-shadow: 4px 6px 14px var(--shadow);
+}
+
+.coverTitle {
+  writing-mode: vertical-rl;
+  padding: 8px 5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #2b2118;
+  background: #f3e6c9;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.title {
+  text-align: center;
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 16px;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  font-size: 0.92rem;
+}
+
+.meta dt {
+  color: var(--ink-soft);
+}
+
+.description {
+  margin-top: 16px;
+  line-height: 1.85;
+  font-family: system-ui, sans-serif;
+  font-size: 0.92rem;
+}
+
+.read {
+  display: block;
+  margin: 22px 0 8px;
+  padding: 12px;
+  text-align: center;
+  letter-spacing: 0.4em;
+  font-size: 1.05rem;
+  color: var(--paper);
+  background: var(--accent);
+  border-radius: 6px;
+}
+
+.read:hover {
+  filter: brightness(1.1);
+}
+
+.chapters {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--paper-edge);
+}
+
+.chapters h3 {
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  margin-bottom: 8px;
+}
+
+.chapters ol {
+  list-style: none;
+  line-height: 1.8;
+  font-size: 0.9rem;
+}
+
+.more {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.tocLink {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+.source {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.source a {
+  text-decoration: underline;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+}
+
+/* 狭い画面では下から出るシートにする */
+@media (max-width: 720px) {
+  .inspector {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 65dvh;
+    border-left: none;
+    border-top: 1px solid var(--paper-edge);
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -8px 24px var(--shadow);
+    animation-name: slide-up;
+  }
+
+  .cover {
+    display: none;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspector {
+    animation: none;
+  }
+}

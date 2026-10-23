@@ -1,0 +1,147 @@
+.library {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.svg:active {
+  cursor: grabbing;
+}
+
+.floor {
+  fill: var(--floor);
+}
+
+.caseShadow {
+  fill: var(--shadow);
+  filter: blur(6px);
+}
+
+.caseBack {
+  fill: #3a2414;
+}
+
+.bookcase {
+  cursor: zoom-in;
+}
+
+.plaque {
+  fill: #e9d6a8;
+  stroke: #8a6a2e;
+  stroke-width: 1;
+}
+
+.plaqueEmpty {
+  fill: #5a3a20;
+}
+
+.plaqueText {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  fill: #3b2a14;
+}
+
+.book {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.book:hover,
+.book[data-selected] {
+  transform: translateY(-5px);
+}
+
+.book:focus {
+  outline: none;
+}
+
+.band {
+  stroke: rgba(232, 196, 120, 0.75);
+  stroke-width: 0.6;
+}
+
+.label {
+  fill: #f3e6c9;
+  stroke: rgba(0, 0, 0, 0.25);
+  stroke-width: 0.4;
+}
+
+.spineText {
+  writing-mode: vertical-rl;
+  font-weight: 600;
+  fill: #2b2118;
+  pointer-events: none;
+}
+
+.focusRing {
+  fill: none;
+  stroke: none;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.book:focus-visible .focusRing {
+  stroke: #f2c14e;
+}
+
+.book[data-selected] .focusRing {
+  stroke: #f2c14e;
+  stroke-dasharray: 3 2;
+}
+
+.controls {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  display: flex;
+  gap: 6px;
+}
+
+.controls button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: 6px;
+  box-shadow: 0 2px 6px var(--shadow);
+  cursor: pointer;
+}
+
+.controls button:hover {
+  color: var(--accent);
+}
+
+.hint {
+  position: absolute;
+  left: 16px;
+  bottom: 12px;
+  right: 16px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book {
+    transition: none;
+  }
+}
