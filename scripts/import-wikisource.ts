@@ -164,9 +164,163 @@ const DAOISM: BookConfig[] = [
   },
 ];
 
+// ctext.org「儒家」(https://ctext.org/confucianism/zhs) の収録書に対応する書目
+// （大學・中庸は禮記の篇として収める）
+const CONFUCIANISM: BookConfig[] = [
+  {
+    slug: "lunyu",
+    page: "論語",
+    title: "論語",
+    author: "孔子の弟子たち",
+    era: "春秋〜戰國",
+    description: "孔子と弟子たちの言行を記した二十篇。儒家の根本となる書。",
+    spineColor: "#6a2a2a",
+    hasSubpages: true,
+  },
+  {
+    slug: "mengzi",
+    page: "孟子",
+    title: "孟子",
+    author: "孟軻",
+    era: "戰國",
+    description: "孟子の言行録。性善説と仁義による王道政治を説く。",
+    spineColor: "#2a4a6a",
+    hasSubpages: true,
+  },
+  {
+    slug: "liji",
+    page: "禮記",
+    title: "禮記",
+    author: "戴聖 編",
+    era: "西漢",
+    description: "礼についての論説を集めた四十九篇。大學・中庸を含む。",
+    spineColor: "#4a3a1a",
+    hasSubpages: true,
+  },
+  {
+    slug: "xunzi",
+    page: "荀子",
+    title: "荀子",
+    author: "荀況",
+    era: "戰國",
+    description: "性悪説を唱え、礼と学びによる人の教化を説く三十二篇。",
+    spineColor: "#3a4a3a",
+    hasSubpages: true,
+  },
+  {
+    slug: "xiaojing",
+    page: "孝經",
+    title: "孝經",
+    author: "託名 曾子",
+    era: "戰國〜秦漢",
+    description: "孝を徳の根本として説く短い經典。",
+    spineColor: "#7a5a2a",
+  },
+  {
+    slug: "da-dai-liji",
+    page: "大戴禮記",
+    title: "大戴禮記",
+    author: "戴德 編",
+    era: "西漢",
+    description: "禮記と並ぶ、礼についての論説集。",
+    spineColor: "#5a4a2a",
+    hasSubpages: true,
+  },
+  {
+    slug: "chunqiu-fanlu",
+    page: "春秋繁露",
+    title: "春秋繁露",
+    author: "董仲舒",
+    era: "西漢",
+    description: "春秋公羊學に基づき、天人相関と陰陽五行を論じる。",
+    spineColor: "#2a2a4a",
+    hasSubpages: true,
+  },
+  {
+    slug: "hanshi-waizhuan",
+    page: "韓詩外傳",
+    title: "韓詩外傳",
+    author: "韓嬰",
+    era: "西漢",
+    description: "故事を語り、詩經の句で結ぶ説話集。十卷。",
+    spineColor: "#4a2a3a",
+    hasSubpages: true,
+  },
+  {
+    slug: "xinyu",
+    page: "新語",
+    title: "新語",
+    author: "陸賈",
+    era: "西漢",
+    description: "漢の高祖に、秦が滅んだわけと国を治める道を説いた十二篇。",
+    spineColor: "#3a5a5a",
+    hasSubpages: true,
+  },
+  {
+    slug: "shuoyuan",
+    page: "說苑",
+    title: "說苑",
+    author: "劉向",
+    era: "西漢",
+    description: "先秦から漢初までの故事・逸話を二十の部類に分けて集めた書。",
+    spineColor: "#5a2a4a",
+    hasSubpages: true,
+  },
+  {
+    slug: "xinxu",
+    page: "新序",
+    title: "新序",
+    author: "劉向",
+    era: "西漢",
+    description: "古の故事を集め、君主への戒めとした書。",
+    spineColor: "#2a5a4a",
+    hasSubpages: true,
+  },
+  {
+    slug: "fayan",
+    page: "法言",
+    title: "法言",
+    author: "揚雄",
+    era: "西漢",
+    description: "論語にならい、問答の形で儒家の道を説く十三卷。揚子法言とも。",
+    spineColor: "#4a4a5a",
+    hasSubpages: true,
+  },
+  {
+    slug: "qianfu-lun",
+    page: "潛夫論",
+    title: "潛夫論",
+    author: "王符",
+    era: "東漢",
+    description: "後漢の政治と社会の弊害を批判した論集。",
+    spineColor: "#3a3a2a",
+    hasSubpages: true,
+  },
+  {
+    slug: "zhonglun",
+    page: "中論",
+    title: "中論",
+    author: "徐幹",
+    era: "東漢",
+    description: "儒家の立場から、身の修め方と政治のあり方を論じる。",
+    spineColor: "#5a3a3a",
+  },
+  {
+    slug: "kongzi-jiayu",
+    page: "孔子家語",
+    title: "孔子家語",
+    author: "王肅 注",
+    era: "三國魏",
+    description: "孔子と弟子たちの言行・逸話を集めた書。",
+    spineColor: "#6a4a3a",
+    hasSubpages: true,
+  },
+];
+
 const BOOKS = [
   ...MEDICINE.map((b) => ({ ...b, category: "醫家" })),
   ...DAOISM.map((b) => ({ ...b, category: "道家" })),
+  ...CONFUCIANISM.map((b) => ({ ...b, category: "儒家" })),
 ];
 
 const USER_AGENT =
@@ -341,7 +495,8 @@ function parsePage(html: string): SectionNode {
 
 /**
  * 目次ページの見出しごとに、サブページへのリンクを順番に拾う。
- * 見出しのない目次ページは、ページ全体を見出しなし (title: "") の一部としてまとめる。
+ * 見出しのない目次ページや、リンクのある見出しが「目錄」など一つだけのページは、
+ * 見出しなし (title: "") の一部としてまとめる。
  */
 function parseIndexPage(html: string, book: string) {
   const $ = loadArticle(html, { keepTables: true });
@@ -351,14 +506,29 @@ function parseIndexPage(html: string, book: string) {
       .find('a[rel="mw:WikiLink"]')
       .toArray()
       .map((a) => ({ title: $(a).attr("title") ?? "", label: $(a).text().trim() }))
-      .filter((l) => l.title.startsWith(`${book}/`) && !seen.has(l.title) && seen.add(l.title));
+      .filter(
+        (l) =>
+          l.title.startsWith(`${book}/`) &&
+          // 「全覽」は全篇をまとめたページなので、各篇と二重にならないよう除く
+          !l.title.endsWith("/全覽") &&
+          !seen.has(l.title) &&
+          seen.add(l.title),
+      );
   };
 
-  const parts = childSections($, null)
+  let parts = childSections($, null)
     .filter((s) => $(s).children("h2").length > 0)
     .map((s) => ({ title: $(s).children("h2").text().trim(), links: subpageLinks($(s)) }))
     .filter((part) => part.links.length > 0);
-  return parts.length > 0 ? parts : [{ title: "", links: subpageLinks($("body")) }];
+  if (parts.length === 0) parts = [{ title: "", links: subpageLinks($("body")) }];
+  if (parts.length === 1) parts[0].title = "";
+
+  // 「善謀」と「善謀/卷上」のように親子が両方あるときは、子のページだけを使う
+  const all = parts.flatMap((p) => p.links.map((l) => l.title));
+  for (const part of parts) {
+    part.links = part.links.filter((l) => !all.some((t) => t.startsWith(`${l.title}/`)));
+  }
+  return parts;
 }
 
 async function buildTree(book: BookConfig): Promise<SectionNode> {

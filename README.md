@@ -43,8 +43,23 @@ ctext.org はサイトのスクレイピングを利用規約で禁止してお�
 | 道家 | yinfujing | 陰符經 |
 | 道家 | liexian-zhuan | 列仙傳 |
 | 道家 | baopuzi | 抱朴子 |
+| 儒家 | lunyu | 論語 |
+| 儒家 | mengzi | 孟子 |
+| 儒家 | liji | 禮記（大學・中庸を含む） |
+| 儒家 | xunzi | 荀子 |
+| 儒家 | xiaojing | 孝經 |
+| 儒家 | da-dai-liji | 大戴禮記 |
+| 儒家 | chunqiu-fanlu | 春秋繁露 |
+| 儒家 | hanshi-waizhuan | 韓詩外傳 |
+| 儒家 | xinyu | 新語 |
+| 儒家 | shuoyuan | 說苑 |
+| 儒家 | xinxu | 新序 |
+| 儒家 | fayan | 法言 |
+| 儒家 | qianfu-lun | 潛夫論 |
+| 儒家 | zhonglun | 中論 |
+| 儒家 | kongzi-jiayu | 孔子家語 |
 
-書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `MEDICINE` / `DAOISM` に追加すれば増やせます。
+書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `MEDICINE` / `DAOISM` / `CONFUCIANISM` に追加すれば増やせます。
 取得した HTML は `data/cache/` に保存し、再実行時はそれを使います。
 
 ## 構成
