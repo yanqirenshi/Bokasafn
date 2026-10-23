@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { moveBookcase, saveLibraryCamera } from "@/app/actions";
-import type { BookcasePositions, CameraView } from "@/lib/bookcases";
+import { moveBookcase, saveLibraryCamera, updateBookcaseSettings } from "@/app/actions";
+import type { BookcaseSettings } from "@/lib/bookcase-settings";
+import type { BookcasePositions, BookcaseSettingsMap, CameraView } from "@/lib/bookcases";
+import { BookcaseInspector } from "./BookcaseInspector";
 import type { ShelfBook } from "@/lib/books";
 import { Inspector } from "./Inspector";
 import {
@@ -49,14 +51,20 @@ type CaseDrag = {
 export function Library({
   books,
   positions: savedPositions,
+  settings: savedSettings,
   camera,
 }: {
   books: ShelfBook[];
   positions: BookcasePositions;
+  settings: BookcaseSettingsMap;
   camera: CameraView | null;
 }) {
   const [positions, setPositions] = useState(savedPositions);
-  const cases = useMemo(() => layoutBookcases(books, positions), [books, positions]);
+  const [settingsMap, setSettingsMap] = useState(savedSettings);
+  const cases = useMemo(
+    () => layoutBookcases(books, positions, settingsMap),
+    [books, positions, settingsMap],
+  );
   const svgRef = useRef<SVGSVGElement>(null);
   // 前回のカメラが保存されていればそこから始め、なければ全体を映す
   const [initialView] = useState(() => camera ?? boundsOf(cases));
@@ -65,8 +73,20 @@ export function Library({
     initialView,
   );
   useSaveCamera(viewBox, initialView);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const selected = books.find((b) => b.id === selectedId);
+  // インスペクターに出すもの。本か本棚のどちらか一つ
+  const [selection, setSelection] = useState<
+    { kind: "book"; id: number } | { kind: "case"; key: string } | null
+  >(null);
+  const selectedId = selection?.kind === "book" ? selection.id : null;
+  const selectedBook = books.find((b) => b.id === selectedId);
+  const selectedCase =
+    selection?.kind === "case" ? cases.find((c) => c.key === selection.key) : undefined;
+  const saveSettingsLater = useDebouncedSettingsSave();
+
+  const changeSettings = (key: string, next: BookcaseSettings) => {
+    setSettingsMap((prev) => ({ ...prev, [key]: next }));
+    saveSettingsLater(key, next);
+  };
 
   // 本棚のドラッグ。動かした直後のクリック（本棚へ寄る・本を選ぶ）は無視する
   const caseDrag = useRef<CaseDrag | null>(null);
@@ -76,7 +96,7 @@ export function Library({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedId(null);
+      if (e.key === "Escape") setSelection(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -206,10 +226,14 @@ export function Library({
               key={c.key}
               bookcase={c}
               dragging={c.key === draggingKey}
+              selected={c.key === selectedCase?.key}
               selectedId={selectedId}
               onPointerDown={(e) => onCasePointerDown(c, e)}
               onZoom={() => !suppressClick() && animateTo(caseView(c))}
-              onSelect={(book) => !suppressClick() && setSelectedId(book.id)}
+              onOpenSettings={() =>
+                !suppressClick() && setSelection({ kind: "case", key: c.key })
+              }
+              onSelect={(book) => !suppressClick() && setSelection({ kind: "book", id: book.id })}
             />
           ))}
         </svg>
@@ -227,9 +251,40 @@ export function Library({
         </div>
       </div>
 
-      {selected && <Inspector book={selected} onClose={() => setSelectedId(null)} />}
+      {selectedBook && <Inspector book={selectedBook} onClose={() => setSelection(null)} />}
+      {selectedCase && (
+        <BookcaseInspector
+          key={selectedCase.key}
+          bookcase={selectedCase}
+          onChange={(next) => changeSettings(selectedCase.key, next)}
+          onClose={() => setSelection(null)}
+        />
+      )}
     </div>
   );
+}
+
+const SETTINGS_SAVE_DELAY_MS = 400;
+
+/** 本棚の設定は入力が落ち着いてから本棚ごとに保存する */
+function useDebouncedSettingsSave() {
+  const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  useEffect(() => {
+    const pending = timers.current;
+    return () => pending.forEach(clearTimeout);
+  }, []);
+  return (key: string, settings: BookcaseSettings) => {
+    clearTimeout(timers.current.get(key));
+    timers.current.set(
+      key,
+      setTimeout(() => {
+        timers.current.delete(key);
+        updateBookcaseSettings(key, settings).catch((err) =>
+          console.error("本棚の設定を保存できませんでした", err),
+        );
+      }, SETTINGS_SAVE_DELAY_MS),
+    );
+  };
 }
 
 const CAMERA_SAVE_DELAY_MS = 600;
@@ -250,16 +305,20 @@ function useSaveCamera(viewBox: ViewBox, initialView: ViewBox) {
 function BookcaseView({
   bookcase: c,
   dragging,
+  selected,
   selectedId,
   onPointerDown,
   onZoom,
+  onOpenSettings,
   onSelect,
 }: {
   bookcase: Bookcase<ShelfBook>;
   dragging: boolean;
+  selected: boolean;
   selectedId: number | null;
   onPointerDown: (e: React.PointerEvent) => void;
   onZoom: () => void;
+  onOpenSettings: () => void;
   onSelect: (book: ShelfBook) => void;
 }) {
   const innerW = c.w - CASE_FRAME * 2;
@@ -267,6 +326,7 @@ function BookcaseView({
     <g
       className={styles.bookcase}
       data-dragging={dragging || undefined}
+      data-selected={selected || undefined}
       transform={`translate(${c.x} ${c.y})`}
       onPointerDown={onPointerDown}
       onClick={onZoom}
@@ -280,23 +340,41 @@ function BookcaseView({
         height={c.h - CASE_FRAME * 2 - CASE_PLAQUE_H}
         className={styles.caseBack}
       />
-      <rect
-        x={c.w / 2 - 60}
-        y={CASE_FRAME + 4}
-        width={120}
-        height={CASE_PLAQUE_H - 10}
-        rx={3}
-        className={styles.plaque}
-      />
-      <text
-        x={c.w / 2}
-        y={CASE_FRAME + 4 + (CASE_PLAQUE_H - 10) / 2}
-        className={styles.plaqueText}
-        textAnchor="middle"
-        dominantBaseline="central"
+      {/* 名札をクリックすると、この本棚の設定をインスペクターに出す */}
+      <g
+        className={styles.plaqueButton}
+        role="button"
+        tabIndex={0}
+        aria-label={`${c.label} の本棚の設定`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenSettings();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpenSettings();
+          }
+        }}
       >
-        {c.label}
-      </text>
+        <rect
+          x={c.w / 2 - 60}
+          y={CASE_FRAME + 4}
+          width={120}
+          height={CASE_PLAQUE_H - 10}
+          rx={3}
+          className={styles.plaque}
+        />
+        <text
+          x={c.w / 2}
+          y={CASE_FRAME + 4 + (CASE_PLAQUE_H - 10) / 2}
+          className={styles.plaqueText}
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {c.label}
+        </text>
+      </g>
       {c.shelves.map((s, i) => (
         <rect
           key={i}

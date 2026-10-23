@@ -126,6 +126,42 @@
   color: var(--accent);
 }
 
+.fields {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-edge);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 6em 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.field input {
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--wall);
+  border: 1px solid var(--paper-edge);
+  border-radius: 4px;
+}
+
+.field input:invalid {
+  border-color: var(--accent);
+}
+
+.note {
+  margin-top: 14px;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
 .source {
   margin-top: 20px;
   font-size: 0.8rem;

@@ -1,6 +1,10 @@
 import { Suspense } from "react";
 import { Library } from "@/components/library/Library";
-import { getCameraView, listBookcasePositions } from "@/lib/bookcases";
+import {
+  getCameraView,
+  listBookcasePositions,
+  listBookcaseSettings,
+} from "@/lib/bookcases";
 import { listShelfBooks } from "@/lib/books";
 import styles from "./home.module.css";
 
@@ -15,9 +19,10 @@ export default function Home() {
 }
 
 async function Shelves() {
-  const [books, positions, camera] = await Promise.all([
+  const [books, positions, settings, camera] = await Promise.all([
     listShelfBooks(),
     listBookcasePositions(),
+    listBookcaseSettings(),
     getCameraView("library"),
   ]);
   if (books.length === 0) {
@@ -27,5 +32,5 @@ async function Shelves() {
       </p>
     );
   }
-  return <Library books={books} positions={positions} camera={camera} />;
+  return <Library books={books} positions={positions} settings={settings} camera={camera} />;
 }

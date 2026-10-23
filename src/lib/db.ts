@@ -43,6 +43,14 @@ CREATE TABLE IF NOT EXISTS bookcase_positions (
   updated_at  TEXT NOT NULL
 );
 
+-- 本棚ごとの設定。段数と最小横幅（本が入りきらなければ横幅はこれより広がる）。
+CREATE TABLE IF NOT EXISTS bookcase_settings (
+  key         TEXT PRIMARY KEY,
+  shelf_rows  INTEGER NOT NULL,
+  min_width   REAL    NOT NULL,
+  updated_at  TEXT    NOT NULL
+);
+
 -- 本棚の画面のカメラ（SVG の viewBox）。key ごとに一つ（いまは 'library' だけ）。
 CREATE TABLE IF NOT EXISTS camera_views (
   key         TEXT PRIMARY KEY,

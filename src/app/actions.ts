@@ -1,6 +1,7 @@
 "use server";
 
-import { saveBookcasePosition, saveCameraView } from "@/lib/bookcases";
+import { isValidBookcaseSettings, type BookcaseSettings } from "@/lib/bookcase-settings";
+import { saveBookcasePosition, saveBookcaseSettings, saveCameraView } from "@/lib/bookcases";
 
 const KEY_PATTERN = /^[^\s:]{1,64}:\d{1,4}$/u;
 // ズームに制限がないので、座標の範囲は広めにとる（NaN や Infinity だけを弾くのが目的）
@@ -15,6 +16,16 @@ export async function moveBookcase(key: string, x: number, y: number) {
   if (typeof key !== "string" || !KEY_PATTERN.test(key)) throw new Error("invalid key");
   if (!isCoordinate(x) || !isCoordinate(y)) throw new Error("invalid position");
   saveBookcasePosition(key, Math.round(x), Math.round(y));
+}
+
+/** 本棚ごとの設定（段数と最小横幅）を保存する */
+export async function updateBookcaseSettings(key: string, settings: BookcaseSettings) {
+  if (typeof key !== "string" || !KEY_PATTERN.test(key)) throw new Error("invalid key");
+  if (!isValidBookcaseSettings(settings)) throw new Error("invalid settings");
+  saveBookcaseSettings(key, {
+    shelfRows: settings.shelfRows,
+    minWidth: Math.round(settings.minWidth),
+  });
 }
 
 /** 本棚の画面のカメラ（視点とズーム）を保存する */

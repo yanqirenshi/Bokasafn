@@ -1,4 +1,5 @@
 import { connection } from "next/server";
+import type { BookcaseSettings } from "./bookcase-settings";
 import { getDb } from "./db";
 
 export type BookcasePositions = Record<string, { x: number; y: number }>;
@@ -13,7 +14,31 @@ export async function listBookcasePositions(): Promise<BookcasePositions> {
   return Object.fromEntries(rows.map((r) => [r.key, { x: r.x, y: r.y }]));
 }
 
-export type CameraView = { x: number; y: number; w: number; h: number };
+export type BookcaseSettingsMap = Record<string, BookcaseSettings>;
+
+export async function listBookcaseSettings(): Promise<BookcaseSettingsMap> {
+  await connection();
+  const rows = getDb()
+    .prepare("SELECT key, shelf_rows AS shelfRows, min_width AS minWidth FROM bookcase_settings")
+    .all() as ({ key: string } & BookcaseSettings)[];
+  return Object.fromEntries(
+    rows.map((r) => [r.key, { shelfRows: r.shelfRows, minWidth: r.minWidth }]),
+  );
+}
+
+export function saveBookcaseSettings(key: string, { shelfRows, minWidth }: BookcaseSettings) {
+  getDb()
+    .prepare(
+      `INSERT INTO bookcase_settings (key, shelf_rows, min_width, updated_at)
+       VALUES (?, ?, ?, datetime('now'))
+       ON CONFLICT(key) DO UPDATE SET
+         shelf_rows = excluded.shelf_rows, min_width = excluded.min_width,
+         updated_at = excluded.updated_at`,
+    )
+    .run(key, shelfRows, minWidth);
+}
+
+export type CameraView ={ x: number; y: number; w: number; h: number };
 
 export async function getCameraView(key: string): Promise<CameraView | null> {
   await connection();

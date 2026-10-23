@@ -2,12 +2,20 @@
 // 本棚の中身（棚板・本）の座標は本棚の左上を原点とした相対座標で持ち、
 // 本棚を動かすときは本棚の x, y だけを変える。
 
-export const CASE_W = 320;
-export const CASE_H = 440;
+import {
+  DEFAULT_BOOKCASE_SETTINGS,
+  type BookcaseSettings,
+} from "@/lib/bookcase-settings";
+
 const FRAME = 14;
 const PLAQUE_H = 34;
-const SHELF_ROWS = 4;
+/** 一段の高さ（棚板を含む） */
+const ROW_H = 94.5;
 const SHELF_THICKNESS = 8;
+/** 本棚の内側で、本の左右に空ける余白の合計 */
+const INNER_PADDING = 12;
+/** 本と本の間 */
+const SPINE_GAP = 1;
 const COLS = 4;
 const GAP_X = 70;
 const GAP_Y = 90;
@@ -34,9 +42,10 @@ export type Shelf = { y: number; h: number };
 export type Point = { x: number; y: number };
 
 export type Bookcase<T> = {
-  /** 位置を保存するときの識別子。「分類:その分類の何台目か」 */
+  /** 位置や設定を保存するときの識別子。「分類:0」 */
   key: string;
   label: string;
+  settings: BookcaseSettings;
   x: number;
   y: number;
   w: number;
@@ -59,69 +68,95 @@ function spineSize(book: SpineInput) {
   return { w: Math.round(14 + scale * 6.4), h: 60 + (hash(book.slug) % 21) };
 }
 
-const SHELVES: Shelf[] = (() => {
-  const top = FRAME + PLAQUE_H;
-  const rowH = (CASE_H - FRAME * 2 - PLAQUE_H) / SHELF_ROWS;
-  return Array.from({ length: SHELF_ROWS }, (_, i) => ({
-    y: top + rowH * i,
-    h: rowH - SHELF_THICKNESS,
+function shelvesOf(rows: number): Shelf[] {
+  return Array.from({ length: rows }, (_, i) => ({
+    y: FRAME + PLAQUE_H + ROW_H * i,
+    h: ROW_H - SHELF_THICKNESS,
   }));
-})();
+}
 
-/** 既定の並び（格子状）での i 台目の位置 */
-function gridPosition(i: number): Point {
-  return {
-    x: MARGIN + (i % COLS) * (CASE_W + GAP_X),
-    y: MARGIN + Math.floor(i / COLS) * (CASE_H + GAP_Y),
-  };
+/** 本を左から詰めていき、幅 innerW に収まらなくなったら次の段へ送る */
+function packRows(widths: number[], innerW: number): number[][] {
+  const rows: number[][] = [[]];
+  let used = 0;
+  widths.forEach((w, i) => {
+    if (used > 0 && used + w > innerW) {
+      rows.push([]);
+      used = 0;
+    }
+    rows.at(-1)!.push(i);
+    used += w + SPINE_GAP;
+  });
+  return rows;
+}
+
+/**
+ * 指定の段数に収まる本棚の横幅を求める。最小横幅で収まればそのまま、
+ * 収まらなければ収まるまで横に広げる。
+ */
+function fitWidth(widths: number[], { shelfRows, minWidth }: BookcaseSettings) {
+  const chrome = FRAME * 2 + INNER_PADDING;
+  const total = widths.reduce((sum, w) => sum + w + SPINE_GAP, 0);
+  let innerW = Math.max(minWidth - chrome, Math.max(0, ...widths), Math.ceil(total / shelfRows));
+  while (packRows(widths, innerW).length > shelfRows) innerW += 4;
+  return Math.max(minWidth, innerW + chrome);
 }
 
 export function layoutBookcases<T extends SpineInput>(
   books: T[],
   positions: Record<string, Point>,
+  settingsMap: Record<string, BookcaseSettings>,
 ): Bookcase<T>[] {
-  // 分類ごとに本棚を割り当て、棚板が埋まったら次の段、次の本棚へ送る
-  type Draft = { key: string; label: string; rows: PlacedBook<T>[][] };
-  const drafts: Draft[] = [];
-  const innerW = CASE_W - FRAME * 2 - 12;
-
-  for (const [category, group] of Map.groupBy(books, (b) => b.category)) {
-    let n = 0;
-    let current: Draft = { key: `${category}:${n}`, label: category, rows: [[]] };
-    drafts.push(current);
-    let used = 0;
-    for (const book of group) {
-      const size = spineSize(book);
-      if (used + size.w > innerW) {
-        if (current.rows.length === SHELF_ROWS) {
-          n++;
-          current = { key: `${category}:${n}`, label: `${category}（續）`, rows: [[]] };
-          drafts.push(current);
-        } else {
-          current.rows.push([]);
-        }
-        used = 0;
+  // 分類ごとに本棚を一つ用意する
+  const cases = [...Map.groupBy(books, (b) => b.category)].map(([category, group]) => {
+    const key = `${category}:0`;
+    const settings = settingsMap[key] ?? DEFAULT_BOOKCASE_SETTINGS;
+    const sizes = group.map(spineSize);
+    const w = fitWidth(
+      sizes.map((s) => s.w),
+      settings,
+    );
+    const shelves = shelvesOf(settings.shelfRows);
+    const placed: PlacedBook<T>[] = [];
+    packRows(
+      sizes.map((s) => s.w),
+      w - FRAME * 2 - INNER_PADDING,
+    ).forEach((row, r) => {
+      let x = FRAME + INNER_PADDING / 2 + 2;
+      for (const i of row) {
+        const { w: bw, h: bh } = sizes[i];
+        placed.push({ book: group[i], x, y: shelves[r].y + shelves[r].h - bh, w: bw, h: bh });
+        x += bw + SPINE_GAP;
       }
-      current.rows.at(-1)!.push({ book, x: used, y: 0, ...size });
-      used += size.w + 1;
-    }
-  }
+    });
+    return {
+      key,
+      label: category,
+      settings,
+      x: 0,
+      y: 0,
+      w,
+      h: FRAME * 2 + PLAQUE_H + ROW_H * settings.shelfRows,
+      shelves,
+      books: placed,
+    };
+  });
 
-  return drafts.map((draft, i) => ({
-    key: draft.key,
-    label: draft.label,
-    ...(positions[draft.key] ?? gridPosition(i)),
-    w: CASE_W,
-    h: CASE_H,
-    shelves: SHELVES,
-    books: draft.rows.flatMap((row, r) =>
-      row.map((b) => ({
-        ...b,
-        x: FRAME + 8 + b.x,
-        y: SHELVES[r].y + SHELVES[r].h - b.h,
-      })),
-    ),
-  }));
+  // 保存された位置がなければ、左上から COLS 台ずつ並べる（大きさが違っても重ならないように）
+  let x = MARGIN;
+  let y = MARGIN;
+  let rowH = 0;
+  cases.forEach((c, i) => {
+    if (i > 0 && i % COLS === 0) {
+      x = MARGIN;
+      y += rowH + GAP_Y;
+      rowH = 0;
+    }
+    Object.assign(c, positions[c.key] ?? { x, y });
+    x += c.w + GAP_X;
+    rowH = Math.max(rowH, c.h);
+  });
+  return cases;
 }
 
 /** すべての本棚が収まる範囲（余白込み） */

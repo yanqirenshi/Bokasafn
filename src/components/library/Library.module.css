@@ -47,6 +47,21 @@
   opacity: 0.92;
 }
 
+.plaqueButton {
+  cursor: pointer;
+}
+
+.plaqueButton:focus {
+  outline: none;
+}
+
+.plaqueButton:hover .plaque,
+.plaqueButton:focus-visible .plaque,
+.bookcase[data-selected] .plaque {
+  stroke: #f2c14e;
+  stroke-width: 2;
+}
+
 .plaque {
   fill: #e9d6a8;
   stroke: #8a6a2e;
