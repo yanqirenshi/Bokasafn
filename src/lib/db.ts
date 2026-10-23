@@ -34,6 +34,14 @@ CREATE TABLE IF NOT EXISTS sections (
 );
 
 CREATE INDEX IF NOT EXISTS sections_book ON sections(book_id, position);
+
+-- 本棚の画面上の位置（SVG 座標）。ドラッグで動かした本棚だけが入る。
+CREATE TABLE IF NOT EXISTS bookcase_positions (
+  key         TEXT PRIMARY KEY,
+  x           REAL NOT NULL,
+  y           REAL NOT NULL,
+  updated_at  TEXT NOT NULL
+);
 `;
 
 let db: Database.Database | undefined;

@@ -26,6 +26,8 @@ export function useZoomPan(svgRef: RefObject<SVGSVGElement | null>, home: ViewBo
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const gesture = useRef({ dragging: false, startX: 0, startY: 0, pinchDist: 0 });
   const dragged = useRef(false);
+  /** true の間は 1 本指（マウス）のドラッグで視点を動かさない（本棚を動かしているとき） */
+  const panLockRef = useRef(false);
 
   const apply = useCallback((vb: ViewBox) => {
     current.current = vb;
@@ -120,6 +122,7 @@ export function useZoomPan(svgRef: RefObject<SVGSVGElement | null>, home: ViewBo
       return;
     }
 
+    if (panLockRef.current) return;
     if (!g.dragging) {
       if (Math.hypot(e.clientX - g.startX, e.clientY - g.startY) < DRAG_THRESHOLD_PX) return;
       // ここまで来て初めてキャプチャする（クリックの宛先を変えないため）
@@ -148,6 +151,7 @@ export function useZoomPan(svgRef: RefObject<SVGSVGElement | null>, home: ViewBo
     zoomAt,
     animateTo,
     wasDragged: () => dragged.current,
+    panLockRef,
     handlers: {
       onPointerDown,
       onPointerMove,

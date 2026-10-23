@@ -1,13 +1,15 @@
+/* インスペクターは SVG の上に重ねるので、本棚の表示幅は変わらない */
 .library {
+  position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
+  /* インスペクターが滑り込むときにはみ出してスクロールバーが出ないようにする */
+  overflow: hidden;
 }
 
 .stage {
-  position: relative;
-  flex: 1;
-  min-width: 0;
+  position: absolute;
+  inset: 0;
 }
 
 .svg {
@@ -37,7 +39,12 @@
 }
 
 .bookcase {
-  cursor: zoom-in;
+  cursor: grab;
+}
+
+.bookcase[data-dragging] {
+  cursor: grabbing;
+  opacity: 0.92;
 }
 
 .plaque {

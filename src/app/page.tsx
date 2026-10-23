@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Library } from "@/components/library/Library";
+import { listBookcasePositions } from "@/lib/bookcases";
 import { listShelfBooks } from "@/lib/books";
 import styles from "./home.module.css";
 
@@ -18,7 +19,7 @@ export default function Home() {
 }
 
 async function Shelves() {
-  const books = await listShelfBooks();
+  const [books, positions] = await Promise.all([listShelfBooks(), listBookcasePositions()]);
   if (books.length === 0) {
     return (
       <p className={styles.loading}>
@@ -26,5 +27,5 @@ async function Shelves() {
       </p>
     );
   }
-  return <Library books={books} />;
+  return <Library books={books} positions={positions} />;
 }
