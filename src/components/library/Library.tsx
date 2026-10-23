@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { moveBookcase } from "@/app/actions";
-import type { BookcasePositions } from "@/lib/bookcases";
+import { moveBookcase, saveLibraryCamera } from "@/app/actions";
+import type { BookcasePositions, CameraView } from "@/lib/bookcases";
 import type { ShelfBook } from "@/lib/books";
 import { Inspector } from "./Inspector";
 import {
@@ -49,18 +49,22 @@ type CaseDrag = {
 export function Library({
   books,
   positions: savedPositions,
+  camera,
 }: {
   books: ShelfBook[];
   positions: BookcasePositions;
+  camera: CameraView | null;
 }) {
   const [positions, setPositions] = useState(savedPositions);
   const cases = useMemo(() => layoutBookcases(books, positions), [books, positions]);
   const svgRef = useRef<SVGSVGElement>(null);
-  const [initialView] = useState(() => boundsOf(cases));
+  // 前回のカメラが保存されていればそこから始め、なければ全体を映す
+  const [initialView] = useState(() => camera ?? boundsOf(cases));
   const { viewBox, zoomAt, animateTo, wasDragged, panLockRef, handlers } = useZoomPan(
     svgRef,
     initialView,
   );
+  useSaveCamera(viewBox, initialView);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const selected = books.find((b) => b.id === selectedId);
 
@@ -226,6 +230,21 @@ export function Library({
       {selected && <Inspector book={selected} onClose={() => setSelectedId(null)} />}
     </div>
   );
+}
+
+const CAMERA_SAVE_DELAY_MS = 600;
+
+/** カメラが動き終わってから少し待って SQLite に保存する（ドラッグやアニメーション中は保存しない） */
+function useSaveCamera(viewBox: ViewBox, initialView: ViewBox) {
+  useEffect(() => {
+    if (viewBox === initialView) return;
+    const timer = setTimeout(() => {
+      saveLibraryCamera(viewBox).catch((err) =>
+        console.error("カメラの位置を保存できませんでした", err),
+      );
+    }, CAMERA_SAVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [viewBox, initialView]);
 }
 
 function BookcaseView({

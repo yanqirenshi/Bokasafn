@@ -42,6 +42,16 @@ CREATE TABLE IF NOT EXISTS bookcase_positions (
   y           REAL NOT NULL,
   updated_at  TEXT NOT NULL
 );
+
+-- 本棚の画面のカメラ（SVG の viewBox）。key ごとに一つ（いまは 'library' だけ）。
+CREATE TABLE IF NOT EXISTS camera_views (
+  key         TEXT PRIMARY KEY,
+  x           REAL NOT NULL,
+  y           REAL NOT NULL,
+  w           REAL NOT NULL,
+  h           REAL NOT NULL,
+  updated_at  TEXT NOT NULL
+);
 `;
 
 let db: Database.Database | undefined;
