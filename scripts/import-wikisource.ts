@@ -22,6 +22,8 @@ type BookConfig = {
   spineColor: string;
   /** 目次ページから「書名/〜」のサブページを辿って本文を集める */
   hasSubpages?: boolean;
+  /** 本文から取り除く段落（注釈へのリンクだけの段落など） */
+  dropParagraphs?: string[];
 };
 
 // ctext.org「醫家」(https://ctext.org/chinese-medicine/zhs) の収録書に対応する書目
@@ -176,6 +178,8 @@ const CONFUCIANISM: BookConfig[] = [
     description: "孔子と弟子たちの言行を記した二十篇。儒家の根本となる書。",
     spineColor: "#6a2a2a",
     hasSubpages: true,
+    // 各篇の先頭にある注釈ページへのリンク
+    dropParagraphs: ["註疏"],
   },
   {
     slug: "mengzi",
@@ -209,7 +213,8 @@ const CONFUCIANISM: BookConfig[] = [
   },
   {
     slug: "xiaojing",
-    page: "孝經",
+    // 「孝經」は版本の一覧ページなので、今文孝經を使う
+    page: "今文孝經",
     title: "孝經",
     author: "託名 曾子",
     era: "戰國〜秦漢",
@@ -298,12 +303,14 @@ const CONFUCIANISM: BookConfig[] = [
   },
   {
     slug: "zhonglun",
-    page: "中論",
+    // 「中論」は佛教の中論との一覧ページなので、儒家の方を使う
+    page: "中論 (儒家)",
     title: "中論",
     author: "徐幹",
     era: "東漢",
     description: "儒家の立場から、身の修め方と政治のあり方を論じる。",
     spineColor: "#5a3a3a",
+    hasSubpages: true,
   },
   {
     slug: "kongzi-jiayu",
@@ -494,34 +501,58 @@ function parsePage(html: string): SectionNode {
 }
 
 /**
+ * 篇の名前を決める。基本はリンクの文字だが、次の場合はページ名から作る。
+ * - 「雜事/卷一」のように二段のページ名 → 「雜事 卷一」
+ * - リンクの文字が「下」のように一文字だけ（「曲禮 上 下」と並べた目次）→ 「曲禮下」
+ * 「一宇　宇者，道也。」のように副題が付いたリンクは、篇名だけを使う。
+ */
+function chapterTitle(book: string, title: string, label: string) {
+  const path = title.slice(book.length + 1);
+  if (path.includes("/")) return path.replaceAll("/", " ");
+  if ([...label].length <= 1) return path;
+  return label.split("　")[0];
+}
+
+/**
  * 目次ページの見出しごとに、サブページへのリンクを順番に拾う。
  * 見出しのない目次ページや、リンクのある見出しが「目錄」など一つだけのページは、
  * 見出しなし (title: "") の一部としてまとめる。
  */
 function parseIndexPage(html: string, book: string) {
   const $ = loadArticle(html, { keepTables: true });
-  const subpageLinks = (root: cheerio.Cheerio<Element>) => {
-    const seen = new Set<string>();
-    return root
+  const seen = new Set<string>();
+  const subpageLinks = (root: cheerio.Cheerio<Element>) =>
+    root
       .find('a[rel="mw:WikiLink"]')
       .toArray()
-      .map((a) => ({ title: $(a).attr("title") ?? "", label: $(a).text().trim() }))
+      .map((a) => {
+        const raw = $(a).attr("title") ?? "";
+        // 「潛夫論/ 卷一」のような書き間違いのリンクは、空白を除いたページ名で取りにいく
+        const title = raw.replace(/\/\s+/g, "/").trim();
+        const red = ($(a).attr("href") ?? "").includes("redlink=1");
+        return { title, label: $(a).text().trim(), missing: red && title === raw };
+      })
       .filter(
         (l) =>
           l.title.startsWith(`${book}/`) &&
+          // 存在しないページ（赤リンク）は飛ばす
+          !l.missing &&
           // 「全覽」は全篇をまとめたページなので、各篇と二重にならないよう除く
           !l.title.endsWith("/全覽") &&
           !seen.has(l.title) &&
           seen.add(l.title),
-      );
-  };
+      )
+      .map(({ title, label }) => ({ title, label: chapterTitle(book, title, label) }));
 
   let parts = childSections($, null)
     .filter((s) => $(s).children("h2").length > 0)
     .map((s) => ({ title: $(s).children("h2").text().trim(), links: subpageLinks($(s)) }))
     .filter((part) => part.links.length > 0);
   if (parts.length === 0) parts = [{ title: "", links: subpageLinks($("body")) }];
-  if (parts.length === 1) parts[0].title = "";
+  // 見出しが一つだけのときや「目錄」の見出しは、階層にせず篇を直接並べる
+  for (const part of parts) {
+    if (parts.length === 1 || /^目[錄录録]$/.test(part.title)) part.title = "";
+  }
 
   // 「善謀」と「善謀/卷上」のように親子が両方あるときは、子のページだけを使う
   const all = parts.flatMap((p) => p.links.map((l) => l.title));
@@ -533,22 +564,75 @@ function parseIndexPage(html: string, book: string) {
 
 async function buildTree(book: BookConfig): Promise<SectionNode> {
   const html = await fetchPageHtml(book.page);
+  if (html.includes("mw:PageProp/disambiguation")) {
+    throw new Error(
+      `「${book.page}」は版本の一覧（曖昧さ回避）ページです。本文のあるページを指定してください`,
+    );
+  }
   if (!book.hasSubpages) return parsePage(html);
 
   const root: SectionNode = { title: "", body: "", children: [] };
+  // 中身がまったく同じページ（「善謀/卷上」と「善謀/卷下」がともに全文を含むなど）は一度だけ使う
+  const seenContent = new Map<string, { node: SectionNode; title: string }>();
   for (const part of parseIndexPage(html, book.page)) {
     const children: SectionNode[] = [];
     for (const link of part.links) {
       console.log(`  ${link.title}`);
       const page = parsePage(await fetchPageHtml(link.title));
-      // 「一宇　宇者，道也。」のように副題が付いたリンクは、篇名だけを使う
-      const title = link.label.split("　")[0];
-      children.push({ title, body: page.body, children: page.children });
+      const node = { title: link.label, body: page.body, children: page.children };
+      const content = JSON.stringify([node.body, node.children]);
+      const same = seenContent.get(content);
+      if (same) {
+        // 同じ親ページの下の重複なら、残した方の名前を親の名前にする（「善謀 卷上」→「善謀」）
+        const parent = link.title.slice(0, link.title.lastIndexOf("/"));
+        if (same.title.startsWith(`${parent}/`) && parent !== book.page) {
+          same.node.title = parent.slice(book.page.length + 1);
+        }
+        continue;
+      }
+      seenContent.set(content, { node, title: link.title });
+      children.push(node);
     }
+    // 「新語/卷上」のように、ほかの篇をまとめて載せただけのページは除く
+    const titles = new Set(children.map((c) => c.title));
+    const isDigest = (n: SectionNode) =>
+      n.children.filter((c) => c.title !== n.title && titles.has(c.title)).length >= 2;
+    const kept = children.filter((n) => !isDigest(n));
+    children.splice(0, children.length, ...kept);
+    // 見出しの下に篇が一つしかなければ、見出しの階層は作らない（法言の「序」）
+    if (children.length === 1) part.title = "";
     if (part.title) root.children.push({ title: part.title, body: "", children });
     else root.children.push(...children);
   }
   return root;
+}
+
+function dropParagraphs(node: SectionNode, drop: string[]): SectionNode {
+  return {
+    ...node,
+    body: node.body
+      .split("\n\n")
+      .filter((p) => !drop.includes(p.trim()))
+      .join("\n\n"),
+    children: node.children.map((c) => dropParagraphs(c, drop)),
+  };
+}
+
+/** 他の版本への案内など、本文ではない節や段落の目印 */
+const NON_TEXT_SECTIONS = ["他本", "其他版本", "其它版本"];
+const NON_TEXT_PARAGRAPH = /^(参见|參見)[：:]/;
+
+function dropNonText(node: SectionNode): SectionNode {
+  return {
+    ...node,
+    body: node.body
+      .split("\n\n")
+      .filter((p) => !NON_TEXT_PARAGRAPH.test(p.trim()))
+      .join("\n\n"),
+    children: node.children
+      .filter((c) => !NON_TEXT_SECTIONS.includes(c.title))
+      .map(dropNonText),
+  };
 }
 
 function prune(node: SectionNode): SectionNode | undefined {
@@ -583,8 +667,10 @@ function save(book: BookConfig & { category: string }, position: number, tree: S
       for (const child of node.children) walk(child, id, depth + 1);
     };
     // 前置き (序など見出しのない冒頭部分) は「卷首」として先頭に置く。見出しが一つもなければ「全文」
+    // 書名が書いてあるだけの前置きは章にしない
     const leadTitle = tree.children.length > 0 ? "卷首" : "全文";
-    if (tree.body.trim()) walk({ title: leadTitle, body: tree.body, children: [] }, null, 0);
+    const lead = tree.body.trim();
+    if (lead && lead !== book.title) walk({ title: leadTitle, body: tree.body, children: [] }, null, 0);
     for (const child of tree.children) walk(child, null, 0);
   })();
   return count;
@@ -592,12 +678,24 @@ function save(book: BookConfig & { category: string }, position: number, tree: S
 
 async function main() {
   const only = process.argv.slice(2);
+  const failed: string[] = [];
   for (const [i, book] of BOOKS.entries()) {
     if (only.length && !only.includes(book.slug)) continue;
     console.log(`${book.title} (${book.page})`);
-    const tree = prune(await buildTree(book)) ?? { title: "", body: "", children: [] };
-    const count = save(book, i, tree);
-    console.log(`  → ${count} セクションを保存`);
+    try {
+      let tree = dropNonText(await buildTree(book));
+      if (book.dropParagraphs) tree = dropParagraphs(tree, book.dropParagraphs);
+      const count = save(book, i, prune(tree) ?? { title: "", body: "", children: [] });
+      console.log(`  → ${count} セクションを保存`);
+    } catch (err) {
+      // 一冊が失敗しても、残りの本の取り込みは続ける
+      console.error(`  × ${err instanceof Error ? err.message : err}`);
+      failed.push(book.slug);
+    }
+  }
+  if (failed.length) {
+    console.error(`取り込めなかった本: ${failed.join(", ")}`);
+    process.exitCode = 1;
   }
 }
 
