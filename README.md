@@ -24,7 +24,7 @@ npm run import -- shanghan-lun
 
 ## 収録書と取り込み元
 
-ctext.org の「醫家」(https://ctext.org/chinese-medicine/zhs) と「道家」(https://ctext.org/daoism/zhs) にある書目を、中文版ウィキソース（維基文庫）から取り込んでいます。
+ctext.org の「醫家」(https://ctext.org/chinese-medicine/zhs)・「道家」(https://ctext.org/daoism/zhs)・「儒家」(https://ctext.org/confucianism/zhs)・「法家」(https://ctext.org/legalism/zhs) にある書目を、中文版ウィキソース（維基文庫）から取り込んでいます。
 ctext.org はサイトのスクレイピングを利用規約で禁止しており、本文を取る公式 API も API キーが必要なためです。
 
 | 分類 | slug | 書名 |
@@ -58,8 +58,13 @@ ctext.org はサイトのスクレイピングを利用規約で禁止してお�
 | 儒家 | qianfu-lun | 潛夫論 |
 | 儒家 | zhonglun | 中論 |
 | 儒家 | kongzi-jiayu | 孔子家語 |
+| 法家 | hanfeizi | 韓非子 |
+| 法家 | shangjunshu | 商君書 |
+| 法家 | guanzi | 管子 |
+| 法家 | shenzi | 慎子 |
+| 法家 | shenzi-buhai | 申子 |
 
-書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `MEDICINE` / `DAOISM` / `CONFUCIANISM` に追加すれば増やせます。
+書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `MEDICINE` / `DAOISM` / `CONFUCIANISM` / `LEGALISM` に追加すれば増やせます。
 取得した HTML は `data/cache/` に保存し、再実行時はそれを使います。
 
 ## 構成

@@ -324,10 +324,63 @@ const CONFUCIANISM: BookConfig[] = [
   },
 ];
 
+// ctext.org「法家」(https://ctext.org/legalism/zhs) の収録書に対応する書目
+const LEGALISM: BookConfig[] = [
+  {
+    slug: "hanfeizi",
+    page: "韓非子",
+    title: "韓非子",
+    author: "韓非",
+    era: "戰國",
+    description: "法・術・勢による君主の統治を説く五十五篇。法家思想の集大成。",
+    spineColor: "#2a2a2a",
+    hasSubpages: true,
+  },
+  {
+    slug: "shangjunshu",
+    page: "商君書",
+    title: "商君書",
+    author: "商鞅",
+    era: "戰國",
+    description: "秦の変法を主導した商鞅の学派の書。農戦と厳格な法による富国強兵を説く。",
+    spineColor: "#5a1a1a",
+    hasSubpages: true,
+  },
+  {
+    slug: "guanzi",
+    page: "管子",
+    title: "管子",
+    author: "託名 管仲",
+    era: "戰國〜西漢",
+    description: "斉の宰相管仲の名を冠した論集。政治・経済・軍事・思想を幅広く論じる。",
+    spineColor: "#1a3a3a",
+    hasSubpages: true,
+  },
+  {
+    slug: "shenzi",
+    page: "慎子",
+    title: "慎子",
+    author: "慎到",
+    era: "戰國",
+    description: "勢（君主の地位と権力）の重要性を説いた慎到の書。逸文を含む。",
+    spineColor: "#3a3a1a",
+  },
+  {
+    slug: "shenzi-buhai",
+    page: "申子",
+    title: "申子",
+    author: "申不害",
+    era: "戰國",
+    description: "術（臣下を操る君主の技）を説いた申不害の書の残篇と佚文。",
+    spineColor: "#3a1a3a",
+  },
+];
+
 const BOOKS = [
   ...MEDICINE.map((b) => ({ ...b, category: "醫家" })),
   ...DAOISM.map((b) => ({ ...b, category: "道家" })),
   ...CONFUCIANISM.map((b) => ({ ...b, category: "儒家" })),
+  ...LEGALISM.map((b) => ({ ...b, category: "法家" })),
 ];
 
 const USER_AGENT =
@@ -476,7 +529,8 @@ function parseSection($: cheerio.CheerioAPI, section: Element): SectionNode {
   const paragraphs: string[] = [];
   collectParagraphs($, section.children, paragraphs);
   return {
-    title: heading.text().trim(),
+    // 「知忠〈此篇原刻全脫，依《治要》補。〉」のような見出しの注記は篇名から外す
+    title: heading.text().replace(/〈[^〉]*〉/g, "").trim(),
     body: paragraphs.join("\n\n"),
     children: childSections($, section).map((s) => parseSection($, s)),
   };
@@ -579,7 +633,9 @@ async function buildTree(book: BookConfig): Promise<SectionNode> {
     for (const link of part.links) {
       console.log(`  ${link.title}`);
       const page = parsePage(await fetchPageHtml(link.title));
-      const node = { title: link.label, body: page.body, children: page.children };
+      // 「韓非子卷第三 > 十過第十」のように見出し一つで包まれているだけなら、中の篇を使う
+      const only = !page.body.trim() && page.children.length === 1 ? page.children[0] : null;
+      const node = only ?? { title: link.label, body: page.body, children: page.children };
       const content = JSON.stringify([node.body, node.children]);
       const same = seenContent.get(content);
       if (same) {
@@ -619,7 +675,7 @@ function dropParagraphs(node: SectionNode, drop: string[]): SectionNode {
 }
 
 /** 他の版本への案内など、本文ではない節や段落の目印 */
-const NON_TEXT_SECTIONS = ["他本", "其他版本", "其它版本"];
+const NON_TEXT_SECTIONS = ["他本", "其他版本", "其它版本", "注釋本"];
 const NON_TEXT_PARAGRAPH = /^(参见|參見)[：:]/;
 
 function dropNonText(node: SectionNode): SectionNode {
