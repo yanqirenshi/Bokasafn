@@ -24,18 +24,27 @@ npm run import -- shanghan-lun
 
 ## 収録書と取り込み元
 
-ctext.org の「醫家」(https://ctext.org/chinese-medicine/zhs) にある書目を、中文版ウィキソース（維基文庫）から取り込んでいます。
+ctext.org の「醫家」(https://ctext.org/chinese-medicine/zhs) と「道家」(https://ctext.org/daoism/zhs) にある書目を、中文版ウィキソース（維基文庫）から取り込んでいます。
 ctext.org はサイトのスクレイピングを利用規約で禁止しており、本文を取る公式 API も API キーが必要なためです。
 
-| slug | 書名 |
-| --- | --- |
-| huangdi-neijing | 黃帝內經（素問・靈樞） |
-| nanjing | 難經 |
-| shennong-bencao-jing | 神農本草經 |
-| shanghan-lun | 傷寒論 |
-| jingui-yaolue | 金匱要略 |
+| 分類 | slug | 書名 |
+| --- | --- | --- |
+| 醫家 | huangdi-neijing | 黃帝內經（素問・靈樞） |
+| 醫家 | nanjing | 難經 |
+| 醫家 | shennong-bencao-jing | 神農本草經 |
+| 醫家 | shanghan-lun | 傷寒論 |
+| 醫家 | jingui-yaolue | 金匱要略 |
+| 道家 | dao-de-jing | 道德經（王弼本） |
+| 道家 | zhuangzi | 莊子 |
+| 道家 | liezi | 列子 |
+| 道家 | wenzi | 文子 |
+| 道家 | heguanzi | 鶡冠子 |
+| 道家 | guanyinzi | 關尹子 |
+| 道家 | yinfujing | 陰符經 |
+| 道家 | liexian-zhuan | 列仙傳 |
+| 道家 | baopuzi | 抱朴子 |
 
-書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `BOOKS` に追加すれば増やせます。
+書目は [scripts/import-wikisource.ts](scripts/import-wikisource.ts) の `MEDICINE` / `DAOISM` に追加すれば増やせます。
 取得した HTML は `data/cache/` に保存し、再実行時はそれを使います。
 
 ## 構成

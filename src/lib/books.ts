@@ -42,7 +42,8 @@ const SECTION_COLUMNS = `
 export async function listBooks(): Promise<Book[]> {
   await connection();
   return getDb()
-    .prepare(`SELECT ${BOOK_COLUMNS} FROM books b ORDER BY b.category, b.position`)
+    // 分類名ではなく取り込み順に並べる（本棚の既定の配置が分類を足しても変わらないように）
+    .prepare(`SELECT ${BOOK_COLUMNS} FROM books b ORDER BY b.position`)
     .all() as Book[];
 }
 

@@ -25,7 +25,7 @@ type BookConfig = {
 };
 
 // ctext.org「醫家」(https://ctext.org/chinese-medicine/zhs) の収録書に対応する書目
-const BOOKS: BookConfig[] = [
+const MEDICINE: BookConfig[] = [
   {
     slug: "huangdi-neijing",
     page: "黃帝內經",
@@ -74,6 +74,101 @@ const BOOKS: BookConfig[] = [
   },
 ];
 
+// ctext.org「道家」(https://ctext.org/daoism/zhs) の収録書に対応する書目
+const DAOISM: BookConfig[] = [
+  {
+    slug: "dao-de-jing",
+    page: "道德經 (王弼本)",
+    title: "道德經",
+    author: "老子",
+    era: "春秋",
+    description: "道と徳を説く五千余字の書。道家の根本となる經典。王弼本。",
+    spineColor: "#2d4a5a",
+  },
+  {
+    slug: "zhuangzi",
+    page: "莊子",
+    title: "莊子",
+    author: "莊周",
+    era: "戰國",
+    description: "內篇・外篇・雜篇の三十三篇。寓話を通して自然と無為を説く。",
+    spineColor: "#3b5a3a",
+    hasSubpages: true,
+  },
+  {
+    slug: "liezi",
+    page: "列子",
+    title: "列子",
+    author: "列禦寇",
+    era: "戰國",
+    description: "天瑞・黃帝など八篇。寓話によって道家の思想を説く。沖虛真經とも。",
+    spineColor: "#6a4a2a",
+    hasSubpages: true,
+  },
+  {
+    slug: "wenzi",
+    page: "文子",
+    title: "文子",
+    author: "文子",
+    era: "戰國",
+    description: "老子の言葉を敷衍して説いた書。通玄真經とも。",
+    spineColor: "#5a3a4a",
+    hasSubpages: true,
+  },
+  {
+    slug: "heguanzi",
+    page: "鶡冠子",
+    title: "鶡冠子",
+    author: "鶡冠子",
+    era: "戰國",
+    description: "楚の隱者の作と伝わる十九篇。道家に兵家・法家の思想を交える。",
+    spineColor: "#4a4a2a",
+  },
+  {
+    slug: "guanyinzi",
+    page: "關尹子",
+    title: "關尹子",
+    author: "託名 尹喜",
+    era: "不詳（託名 先秦）",
+    description: "老子に道德經を書かせた關令尹喜の作と伝わる九篇。文始真經とも。",
+    spineColor: "#2a3a5a",
+    hasSubpages: true,
+  },
+  {
+    slug: "yinfujing",
+    page: "黃帝陰符經",
+    title: "陰符經",
+    author: "託名 黃帝",
+    era: "不詳",
+    description: "三百余字の短い經典。天の道と人の営みの関わりを説く。",
+    spineColor: "#1f1f2f",
+  },
+  {
+    slug: "liexian-zhuan",
+    page: "列仙傳",
+    title: "列仙傳",
+    author: "託名 劉向",
+    era: "西漢",
+    description: "赤松子・老子・彭祖など、古の仙人七十余人の伝記を集めた書。",
+    spineColor: "#5a2a2a",
+  },
+  {
+    slug: "baopuzi",
+    page: "抱朴子",
+    title: "抱朴子",
+    author: "葛洪",
+    era: "東晉",
+    description: "內篇は神仙・煉丹の術を、外篇は政治や世の中のあり方を論じる。",
+    spineColor: "#3a2a1a",
+    hasSubpages: true,
+  },
+];
+
+const BOOKS = [
+  ...MEDICINE.map((b) => ({ ...b, category: "醫家" })),
+  ...DAOISM.map((b) => ({ ...b, category: "道家" })),
+];
+
 const USER_AGENT =
   "BokasafnLibrary/0.1 (personal non-commercial reading app; local use)";
 const CACHE_DIR = path.join(process.cwd(), "data", "cache", "wikisource");
@@ -117,8 +212,9 @@ const NOISE = [
   "script",
   "meta",
   "link",
-  "table",
   "figure",
+  "#headerContainer",
+  ".ws-header",
   ".mw-empty-elt",
   ".mw-editsection",
   ".noprint",
@@ -127,9 +223,18 @@ const NOISE = [
   "ol.references",
   ".navbox",
   ".thumb",
+  ".licenseContainer",
+  ".licensetpl",
+  ".pagenum",
+  ".ws-pagenum",
 ].join(",");
 
-function loadArticle(html: string) {
+/**
+ * 本文の読み取り用に HTML を読み込み、本文以外の要素を取り除く。
+ * 表 (table) は本文では見出し飾りやナビゲーションなので消すが、
+ * 目次ページでは篇へのリンクを段組みの表に並べていることがあるので keepTables で残す。
+ */
+function loadArticle(html: string, { keepTables = false } = {}) {
   const $ = cheerio.load(html);
   // -{…}- (言語変換の抑止) は Parsoid では中身が空の span になり、文字が data 属性に入っている
   $('[typeof="mw:LanguageVariant"]').each((_, el) => {
@@ -144,7 +249,19 @@ function loadArticle(html: string) {
     $(el).replaceWith(text);
   });
   $(NOISE).remove();
+  if (!keepTables) $("table").remove();
   return $;
+}
+
+/**
+ * parent の中にあるセクションのうち、間に別のセクションを挟まない（一段下の）もの。
+ * parent が null ならページの最上位のセクション。div などに包まれていても拾う。
+ */
+function childSections($: cheerio.CheerioAPI, parent: Element | null): Element[] {
+  return (parent ? $(parent) : $("body"))
+    .find("section")
+    .toArray()
+    .filter((s) => ($(s).parent().closest("section")[0] ?? null) === parent);
 }
 
 function textOf($: cheerio.CheerioAPI, el: Element): string {
@@ -200,41 +317,48 @@ function parseSection($: cheerio.CheerioAPI, section: Element): SectionNode {
   return {
     title: heading.text().trim(),
     body: paragraphs.join("\n\n"),
-    children: $(section)
-      .children("section")
-      .toArray()
-      .map((s) => parseSection($, s)),
+    children: childSections($, section).map((s) => parseSection($, s)),
   };
 }
 
-/** ページ全体を、先頭の前置き (body) と見出しごとのセクション (children) に分ける */
+/**
+ * ページ全体を、先頭の前置き (body) と見出しごとのセクション (children) に分ける。
+ * 見出しのないセクション（冒頭部分や、テンプレートで差し込まれた包み）は、
+ * 本文を前置きに足し、中の見出しはそのまま章として扱う。
+ */
 function parsePage(html: string): SectionNode {
   const $ = loadArticle(html);
-  const sections = $("body > section").toArray();
-  const lead = sections.find((s) => $(s).attr("data-mw-section-id") === "0");
-  const leadNode = lead ? parseSection($, lead) : undefined;
-  return {
-    title: "",
-    body: leadNode?.body ?? "",
-    children: sections.filter((s) => s !== lead).map((s) => parseSection($, s)),
+  const bodies: string[] = [];
+  const children: SectionNode[] = [];
+  const add = (node: SectionNode) => {
+    if (node.title) return children.push(node);
+    if (node.body.trim()) bodies.push(node.body);
+    node.children.forEach(add);
   };
+  childSections($, null).map((s) => parseSection($, s)).forEach(add);
+  return { title: "", body: bodies.join("\n\n"), children };
 }
 
-/** 目次ページの見出しごとに、サブページへのリンクを順番に拾う */
+/**
+ * 目次ページの見出しごとに、サブページへのリンクを順番に拾う。
+ * 見出しのない目次ページは、ページ全体を見出しなし (title: "") の一部としてまとめる。
+ */
 function parseIndexPage(html: string, book: string) {
-  const $ = loadArticle(html);
-  return $("body > section")
-    .toArray()
+  const $ = loadArticle(html, { keepTables: true });
+  const subpageLinks = (root: cheerio.Cheerio<Element>) => {
+    const seen = new Set<string>();
+    return root
+      .find('a[rel="mw:WikiLink"]')
+      .toArray()
+      .map((a) => ({ title: $(a).attr("title") ?? "", label: $(a).text().trim() }))
+      .filter((l) => l.title.startsWith(`${book}/`) && !seen.has(l.title) && seen.add(l.title));
+  };
+
+  const parts = childSections($, null)
     .filter((s) => $(s).children("h2").length > 0)
-    .map((s) => ({
-      title: $(s).children("h2").text().trim(),
-      links: $(s)
-        .find('a[rel="mw:WikiLink"]')
-        .toArray()
-        .map((a) => ({ title: $(a).attr("title") ?? "", label: $(a).text().trim() }))
-        .filter((l) => l.title.startsWith(`${book}/`)),
-    }))
+    .map((s) => ({ title: $(s).children("h2").text().trim(), links: subpageLinks($(s)) }))
     .filter((part) => part.links.length > 0);
+  return parts.length > 0 ? parts : [{ title: "", links: subpageLinks($("body")) }];
 }
 
 async function buildTree(book: BookConfig): Promise<SectionNode> {
@@ -243,13 +367,16 @@ async function buildTree(book: BookConfig): Promise<SectionNode> {
 
   const root: SectionNode = { title: "", body: "", children: [] };
   for (const part of parseIndexPage(html, book.page)) {
-    const partNode: SectionNode = { title: part.title, body: "", children: [] };
+    const children: SectionNode[] = [];
     for (const link of part.links) {
       console.log(`  ${link.title}`);
       const page = parsePage(await fetchPageHtml(link.title));
-      partNode.children.push({ title: link.label, body: page.body, children: page.children });
+      // 「一宇　宇者，道也。」のように副題が付いたリンクは、篇名だけを使う
+      const title = link.label.split("　")[0];
+      children.push({ title, body: page.body, children: page.children });
     }
-    root.children.push(partNode);
+    if (part.title) root.children.push({ title: part.title, body: "", children });
+    else root.children.push(...children);
   }
   return root;
 }
@@ -260,12 +387,12 @@ function prune(node: SectionNode): SectionNode | undefined {
   return { ...node, children };
 }
 
-function save(book: BookConfig, position: number, tree: SectionNode) {
+function save(book: BookConfig & { category: string }, position: number, tree: SectionNode) {
   const db = getDb();
   const insertBook = db.prepare(`
     INSERT INTO books (slug, title, author, era, category, description, spine_color, position,
                        source_name, source_url, license, imported_at)
-    VALUES (@slug, @title, @author, @era, '醫家', @description, @spineColor, @position,
+    VALUES (@slug, @title, @author, @era, @category, @description, @spineColor, @position,
             '維基文庫', @sourceUrl, 'Public domain', datetime('now'))`);
   const insertSection = db.prepare(`
     INSERT INTO sections (book_id, parent_id, position, depth, title, body)
@@ -285,8 +412,9 @@ function save(book: BookConfig, position: number, tree: SectionNode) {
         .lastInsertRowid;
       for (const child of node.children) walk(child, id, depth + 1);
     };
-    // 前置き (序など見出しのない冒頭部分) は「卷首」として先頭に置く
-    if (tree.body.trim()) walk({ title: "卷首", body: tree.body, children: [] }, null, 0);
+    // 前置き (序など見出しのない冒頭部分) は「卷首」として先頭に置く。見出しが一つもなければ「全文」
+    const leadTitle = tree.children.length > 0 ? "卷首" : "全文";
+    if (tree.body.trim()) walk({ title: leadTitle, body: tree.body, children: [] }, null, 0);
     for (const child of tree.children) walk(child, null, 0);
   })();
   return count;

@@ -12,8 +12,6 @@ const COLS = 4;
 const GAP_X = 70;
 const GAP_Y = 90;
 const MARGIN = 80;
-/** 本が少なくても図書館らしく見えるよう、最低限並べておく本棚の数 */
-const MIN_CASES = 8;
 
 export type SpineInput = {
   id: number;
@@ -36,9 +34,9 @@ export type Shelf = { y: number; h: number };
 export type Point = { x: number; y: number };
 
 export type Bookcase<T> = {
-  /** 位置を保存するときの識別子。「分類:その分類の何台目か」、空の本棚は「empty:n」 */
+  /** 位置を保存するときの識別子。「分類:その分類の何台目か」 */
   key: string;
-  label: string | null;
+  label: string;
   x: number;
   y: number;
   w: number;
@@ -83,7 +81,7 @@ export function layoutBookcases<T extends SpineInput>(
   positions: Record<string, Point>,
 ): Bookcase<T>[] {
   // 分類ごとに本棚を割り当て、棚板が埋まったら次の段、次の本棚へ送る
-  type Draft = { key: string; label: string | null; rows: PlacedBook<T>[][] };
+  type Draft = { key: string; label: string; rows: PlacedBook<T>[][] };
   const drafts: Draft[] = [];
   const innerW = CASE_W - FRAME * 2 - 12;
 
@@ -107,9 +105,6 @@ export function layoutBookcases<T extends SpineInput>(
       current.rows.at(-1)!.push({ book, x: used, y: 0, ...size });
       used += size.w + 1;
     }
-  }
-  for (let n = 0; drafts.length < MIN_CASES; n++) {
-    drafts.push({ key: `empty:${n}`, label: null, rows: [] });
   }
 
   return drafts.map((draft, i) => ({

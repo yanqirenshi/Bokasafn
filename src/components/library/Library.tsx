@@ -270,19 +270,17 @@ function BookcaseView({
         width={120}
         height={CASE_PLAQUE_H - 10}
         rx={3}
-        className={c.label ? styles.plaque : styles.plaqueEmpty}
+        className={styles.plaque}
       />
-      {c.label && (
-        <text
-          x={c.w / 2}
-          y={CASE_FRAME + 4 + (CASE_PLAQUE_H - 10) / 2}
-          className={styles.plaqueText}
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
-          {c.label}
-        </text>
-      )}
+      <text
+        x={c.w / 2}
+        y={CASE_FRAME + 4 + (CASE_PLAQUE_H - 10) / 2}
+        className={styles.plaqueText}
+        textAnchor="middle"
+        dominantBaseline="central"
+      >
+        {c.label}
+      </text>
       {c.shelves.map((s, i) => (
         <rect
           key={i}
