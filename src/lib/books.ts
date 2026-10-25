@@ -12,6 +12,9 @@ export type Book = {
   authors: BookAuthor[];
   era: string | null;
   category: string;
+  /** 本を置いている本棚の key と名前 */
+  bookcaseKey: string;
+  bookcaseName: string;
   description: string | null;
   spineColor: string;
   sourceName: string;
@@ -36,6 +39,8 @@ const BOOK_COLUMNS = `
   b.id, b.slug, b.title, b.era, b.category, b.description,
   b.spine_color AS spineColor, b.source_name AS sourceName,
   b.source_url AS sourceUrl, b.license,
+  b.bookcase_key AS bookcaseKey,
+  (SELECT bc.name FROM bookcase bc WHERE bc.key = b.bookcase_key) AS bookcaseName,
   (SELECT COUNT(*) FROM sections s WHERE s.book_id = b.id) AS sectionCount,
   (SELECT COALESCE(SUM(LENGTH(s.body)), 0) FROM sections s WHERE s.book_id = b.id) AS charCount`;
 

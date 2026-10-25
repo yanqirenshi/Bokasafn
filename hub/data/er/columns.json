@@ -187,5 +187,12 @@
         "name": "役割",
         "data_type": "TEXT",
         "_class": "COLUMN"
+    },
+    {
+        "_id": 85,
+        "code": "bookcase_key",
+        "name": "本棚キー",
+        "data_type": "TEXT",
+        "_class": "COLUMN"
     }
 ]

@@ -20,7 +20,9 @@ CREATE TABLE IF NOT EXISTS books (
   source_name  TEXT    NOT NULL,
   source_url   TEXT    NOT NULL,
   license      TEXT,
-  imported_at  TEXT    NOT NULL
+  imported_at  TEXT    NOT NULL,
+  -- 本を置く本棚。以前の DB には ALTER TABLE で足すため、NULL を許す。
+  bookcase_key TEXT    REFERENCES bookcase(key)
 );
 
 -- 巻・篇などの階層。本文 (body) は段落を空行で区切ったプレーンテキスト。
@@ -53,9 +55,11 @@ CREATE TABLE IF NOT EXISTS book_authors (
 
 CREATE INDEX IF NOT EXISTS book_authors_author ON book_authors(author_id);
 
--- 本棚ごとの設定。段数と最小横幅（本が入りきらなければ横幅はこれより広がる）。
+-- 本棚。名札に出す名前と、段数・最小横幅（本が入りきらなければ横幅はこれより広がる）。
+-- key は「分類:0」の形で、位置 (bookcase_positions) もこの key で持つ。
 CREATE TABLE IF NOT EXISTS bookcase (
   key         TEXT PRIMARY KEY,
+  name        TEXT    NOT NULL,
   shelf_rows  INTEGER NOT NULL,
   min_width   REAL    NOT NULL,
   updated_at  TEXT    NOT NULL
@@ -89,6 +93,55 @@ function renameOldTables(db: Database.Database) {
   }
 }
 
+/** 本棚の key（「分類:0」）から、既定の名前（分類）を取り出す SQL の式 */
+const NAME_FROM_KEY = "CASE WHEN key LIKE '%:0' THEN substr(key, 1, length(key) - 2) ELSE key END";
+
+/** 本棚の key。いまは分類ごとに一つで、「分類:0」の形 */
+export function bookcaseKeyOf(category: string) {
+  return `${category}:0`;
+}
+
+/** 本棚がまだ無ければ、分類の名前と既定の設定で作る */
+export function ensureBookcase(db: Database.Database, key: string, name: string) {
+  const { shelfRows, minWidth } = DEFAULT_BOOKCASE_SETTINGS;
+  db.prepare(
+    `INSERT OR IGNORE INTO bookcase (key, name, shelf_rows, min_width, updated_at)
+     VALUES (?, ?, ?, ?, datetime('now'))`,
+  ).run(key, name, shelfRows, minWidth);
+}
+
+// 以前の bookcase には名前の列が無いので足し、key から名前を入れる。
+function addBookcaseName(db: Database.Database) {
+  const columns = db.prepare("PRAGMA table_info(bookcase)").all() as { name: string }[];
+  if (columns.some((c) => c.name === "name")) return;
+  db.transaction(() => {
+    db.exec("ALTER TABLE bookcase ADD COLUMN name TEXT NOT NULL DEFAULT ''");
+    db.exec(`UPDATE bookcase SET name = ${NAME_FROM_KEY}`);
+  })();
+}
+
+// 以前の books には本棚の列が無いので足す。
+// 本棚の決まっていない本は、分類ごとの本棚（無ければ作る）に置く。
+function placeBooksOnBookcases(db: Database.Database) {
+  const columns = db.prepare("PRAGMA table_info(books)").all() as { name: string }[];
+  db.transaction(() => {
+    if (!columns.some((c) => c.name === "bookcase_key")) {
+      db.exec("ALTER TABLE books ADD COLUMN bookcase_key TEXT REFERENCES bookcase(key)");
+    }
+    const categories = db
+      .prepare("SELECT DISTINCT category FROM books WHERE bookcase_key IS NULL")
+      .all() as { category: string }[];
+    const place = db.prepare(
+      "UPDATE books SET bookcase_key = ? WHERE category = ? AND bookcase_key IS NULL",
+    );
+    for (const { category } of categories) {
+      ensureBookcase(db, bookcaseKeyOf(category), category);
+      place.run(bookcaseKeyOf(category), category);
+    }
+    db.exec("CREATE INDEX IF NOT EXISTS books_bookcase ON books(bookcase_key)");
+  })();
+}
+
 // 外部キーの無い以前の bookcase_positions を作り直す。
 // 位置だけあって設定の無い本棚は、既定の設定で bookcase に入れてから移す。
 function addBookcasePositionsForeignKey(db: Database.Database) {
@@ -97,8 +150,8 @@ function addBookcasePositionsForeignKey(db: Database.Database) {
   const { shelfRows, minWidth } = DEFAULT_BOOKCASE_SETTINGS;
   db.transaction(() => {
     db.prepare(
-      `INSERT OR IGNORE INTO bookcase (key, shelf_rows, min_width, updated_at)
-       SELECT key, ?, ?, datetime('now') FROM bookcase_positions`,
+      `INSERT OR IGNORE INTO bookcase (key, name, shelf_rows, min_width, updated_at)
+       SELECT key, ${NAME_FROM_KEY}, ?, ?, datetime('now') FROM bookcase_positions`,
     ).run(shelfRows, minWidth);
     db.exec(`
       CREATE TABLE bookcase_positions_new (
@@ -156,8 +209,10 @@ export function getDb(): Database.Database {
     db.pragma("foreign_keys = ON");
     renameOldTables(db);
     db.exec(SCHEMA);
+    addBookcaseName(db);
     addBookcasePositionsForeignKey(db);
     moveAuthorsOutOfBooks(db);
+    placeBooksOnBookcases(db);
   }
   return db;
 }

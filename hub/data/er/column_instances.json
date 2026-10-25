@@ -388,5 +388,25 @@
         "column_type": "ATTRIBUTE",
         "description": "本の中での著者の並び順",
         "_class": "COLUMN-INSTANCE"
+    },
+    {
+        "_id": 84,
+        "code": "bookcase.name",
+        "physical_name": "name",
+        "logical_name": "名前",
+        "data_type": "TEXT NOT NULL",
+        "column_type": "ATTRIBUTE",
+        "description": "",
+        "_class": "COLUMN-INSTANCE"
+    },
+    {
+        "_id": 86,
+        "code": "books.bookcase_key",
+        "physical_name": "bookcase_key",
+        "logical_name": "本棚キー",
+        "data_type": "TEXT",
+        "column_type": "ATTRIBUTE",
+        "description": "",
+        "_class": "COLUMN-INSTANCE"
     }
 ]

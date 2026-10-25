@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { DEFAULT_BOOKCASE_SETTINGS, type BookcaseSettings } from "./bookcase-settings";
+import type { BookcaseSettings } from "./bookcase-settings";
 import { getDb } from "./db";
 
 export type BookcasePositions = Record<string, { x: number; y: number }>;
@@ -29,13 +29,10 @@ export async function listBookcaseSettings(): Promise<BookcaseSettingsMap> {
 export function saveBookcaseSettings(key: string, { shelfRows, minWidth }: BookcaseSettings) {
   getDb()
     .prepare(
-      `INSERT INTO bookcase (key, shelf_rows, min_width, updated_at)
-       VALUES (?, ?, ?, datetime('now'))
-       ON CONFLICT(key) DO UPDATE SET
-         shelf_rows = excluded.shelf_rows, min_width = excluded.min_width,
-         updated_at = excluded.updated_at`,
+      `UPDATE bookcase SET shelf_rows = ?, min_width = ?, updated_at = datetime('now')
+       WHERE key = ?`,
     )
-    .run(key, shelfRows, minWidth);
+    .run(shelfRows, minWidth, key);
 }
 
 export type CameraView ={ x: number; y: number; w: number; h: number };
@@ -60,19 +57,13 @@ export function saveCameraView(key: string, { x, y, w, h }: CameraView) {
     .run(key, x, y, w, h);
 }
 
-// bookcase_positions は bookcase を参照するので、設定の無い本棚は既定の設定で先に入れておく。
+// 本棚 (bookcase) は本を取り込むときに作られるので、ここでは位置だけを書く。
 export function saveBookcasePosition(key: string, x: number, y: number) {
-  const db = getDb();
-  const { shelfRows, minWidth } = DEFAULT_BOOKCASE_SETTINGS;
-  db.transaction(() => {
-    db.prepare(
-      `INSERT OR IGNORE INTO bookcase (key, shelf_rows, min_width, updated_at)
-       VALUES (?, ?, ?, datetime('now'))`,
-    ).run(key, shelfRows, minWidth);
-    db.prepare(
+  getDb()
+    .prepare(
       `INSERT INTO bookcase_positions (key, x, y, updated_at)
        VALUES (?, ?, ?, datetime('now'))
        ON CONFLICT(key) DO UPDATE SET x = excluded.x, y = excluded.y, updated_at = excluded.updated_at`,
-    ).run(key, x, y);
-  })();
+    )
+    .run(key, x, y);
 }

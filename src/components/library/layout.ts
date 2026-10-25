@@ -25,7 +25,8 @@ export type SpineInput = {
   id: number;
   slug: string;
   title: string;
-  category: string;
+  bookcaseKey: string;
+  bookcaseName: string;
   charCount: number;
 };
 
@@ -42,7 +43,7 @@ export type Shelf = { y: number; h: number };
 export type Point = { x: number; y: number };
 
 export type Bookcase<T> = {
-  /** 位置や設定を保存するときの識別子。「分類:0」 */
+  /** 位置や設定を保存するときの識別子（bookcase.key）。「分類:0」 */
   key: string;
   label: string;
   settings: BookcaseSettings;
@@ -107,9 +108,8 @@ export function layoutBookcases<T extends SpineInput>(
   positions: Record<string, Point>,
   settingsMap: Record<string, BookcaseSettings>,
 ): Bookcase<T>[] {
-  // 分類ごとに本棚を一つ用意する
-  const cases = [...Map.groupBy(books, (b) => b.category)].map(([category, group]) => {
-    const key = `${category}:0`;
+  // 本が置かれている本棚ごとにまとめる
+  const cases = [...Map.groupBy(books, (b) => b.bookcaseKey)].map(([key, group]) => {
     const settings = settingsMap[key] ?? DEFAULT_BOOKCASE_SETTINGS;
     const sizes = group.map(spineSize);
     const w = fitWidth(
@@ -131,7 +131,7 @@ export function layoutBookcases<T extends SpineInput>(
     });
     return {
       key,
-      label: category,
+      label: group[0].bookcaseName,
       settings,
       x: 0,
       y: 0,

@@ -41,8 +41,8 @@
         "description": "本棚の画面上の位置（ドラッグで動かした本棚だけ）",
         "_class": "TABLE",
         "position": {
-            "x": -78,
-            "y": 261,
+            "x": -200,
+            "y": 272,
             "z": 0
         },
         "size": {
@@ -55,7 +55,7 @@
         "code": "bookcase",
         "name": "本棚",
         "physical_name": "bookcase",
-        "description": "本棚ごとの段数と最小横幅",
+        "description": "本棚。名札の名前と、段数・最小横幅",
         "_class": "TABLE",
         "position": {
             "x": -433,
@@ -75,8 +75,8 @@
         "description": "本棚画面のカメラ（SVG の viewBox）",
         "_class": "TABLE",
         "position": {
-            "x": 250,
-            "y": 250,
+            "x": -439,
+            "y": 575,
             "z": 0
         },
         "size": {
@@ -92,8 +92,8 @@
         "description": "著者（複数の本を書いた人も一行）",
         "_class": "TABLE",
         "position": {
-            "x": -1033,
-            "y": -333,
+            "x": -941,
+            "y": -129,
             "z": 0
         },
         "size": {
@@ -109,8 +109,8 @@
         "description": "本と著者の対応（役割は 著・編・注・託名）",
         "_class": "TABLE",
         "position": {
-            "x": -749,
-            "y": -279,
+            "x": -727,
+            "y": -151,
             "z": 0
         },
         "size": {
