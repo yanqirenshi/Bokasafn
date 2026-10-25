@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import type { BookcaseSettings } from "./bookcase-settings";
+import { DEFAULT_BOOKCASE_SETTINGS, type BookcaseSettings } from "./bookcase-settings";
 import { getDb } from "./db";
 
 export type BookcasePositions = Record<string, { x: number; y: number }>;
@@ -19,7 +19,7 @@ export type BookcaseSettingsMap = Record<string, BookcaseSettings>;
 export async function listBookcaseSettings(): Promise<BookcaseSettingsMap> {
   await connection();
   const rows = getDb()
-    .prepare("SELECT key, shelf_rows AS shelfRows, min_width AS minWidth FROM bookcase_settings")
+    .prepare("SELECT key, shelf_rows AS shelfRows, min_width AS minWidth FROM bookcase")
     .all() as ({ key: string } & BookcaseSettings)[];
   return Object.fromEntries(
     rows.map((r) => [r.key, { shelfRows: r.shelfRows, minWidth: r.minWidth }]),
@@ -29,7 +29,7 @@ export async function listBookcaseSettings(): Promise<BookcaseSettingsMap> {
 export function saveBookcaseSettings(key: string, { shelfRows, minWidth }: BookcaseSettings) {
   getDb()
     .prepare(
-      `INSERT INTO bookcase_settings (key, shelf_rows, min_width, updated_at)
+      `INSERT INTO bookcase (key, shelf_rows, min_width, updated_at)
        VALUES (?, ?, ?, datetime('now'))
        ON CONFLICT(key) DO UPDATE SET
          shelf_rows = excluded.shelf_rows, min_width = excluded.min_width,
@@ -60,12 +60,19 @@ export function saveCameraView(key: string, { x, y, w, h }: CameraView) {
     .run(key, x, y, w, h);
 }
 
+// bookcase_positions は bookcase を参照するので、設定の無い本棚は既定の設定で先に入れておく。
 export function saveBookcasePosition(key: string, x: number, y: number) {
-  getDb()
-    .prepare(
+  const db = getDb();
+  const { shelfRows, minWidth } = DEFAULT_BOOKCASE_SETTINGS;
+  db.transaction(() => {
+    db.prepare(
+      `INSERT OR IGNORE INTO bookcase (key, shelf_rows, min_width, updated_at)
+       VALUES (?, ?, ?, datetime('now'))`,
+    ).run(key, shelfRows, minWidth);
+    db.prepare(
       `INSERT INTO bookcase_positions (key, x, y, updated_at)
        VALUES (?, ?, ?, datetime('now'))
        ON CONFLICT(key) DO UPDATE SET x = excluded.x, y = excluded.y, updated_at = excluded.updated_at`,
-    )
-    .run(key, x, y);
+    ).run(key, x, y);
+  })();
 }
