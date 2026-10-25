@@ -35,6 +35,12 @@ export function saveBookcaseSettings(key: string, { shelfRows, minWidth }: Bookc
     .run(shelfRows, minWidth, key);
 }
 
+export function saveBookcaseName(key: string, name: string) {
+  getDb()
+    .prepare("UPDATE bookcase SET name = ?, updated_at = datetime('now') WHERE key = ?")
+    .run(name, key);
+}
+
 export type CameraView ={ x: number; y: number; w: number; h: number };
 
 export async function getCameraView(key: string): Promise<CameraView | null> {

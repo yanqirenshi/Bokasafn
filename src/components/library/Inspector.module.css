@@ -151,7 +151,8 @@
   border-radius: 4px;
 }
 
-.field input:invalid {
+.field input:invalid,
+.field input[aria-invalid="true"] {
   border-color: var(--accent);
 }
 

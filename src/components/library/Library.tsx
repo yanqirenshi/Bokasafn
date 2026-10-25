@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { moveBookcase, saveLibraryCamera, updateBookcaseSettings } from "@/app/actions";
+import {
+  moveBookcase,
+  renameBookcase,
+  saveLibraryCamera,
+  updateBookcaseSettings,
+} from "@/app/actions";
 import { formatAuthors } from "@/lib/authors";
 import type { BookcaseSettings } from "@/lib/bookcase-settings";
 import type { BookcasePositions, BookcaseSettingsMap, CameraView } from "@/lib/bookcases";
@@ -62,10 +67,14 @@ export function Library({
 }) {
   const [positions, setPositions] = useState(savedPositions);
   const [settingsMap, setSettingsMap] = useState(savedSettings);
-  const cases = useMemo(
-    () => layoutBookcases(books, positions, settingsMap),
-    [books, positions, settingsMap],
-  );
+  // インスペクターで変えた本棚の名前（保存が済むまでも画面にはすぐ出す）
+  const [renamed, setRenamed] = useState<Record<string, string>>({});
+  const cases = useMemo(() => {
+    const named = books.map((b) =>
+      renamed[b.bookcaseKey] ? { ...b, bookcaseName: renamed[b.bookcaseKey] } : b,
+    );
+    return layoutBookcases(named, positions, settingsMap);
+  }, [books, renamed, positions, settingsMap]);
   const svgRef = useRef<SVGSVGElement>(null);
   // 前回のカメラが保存されていればそこから始め、なければ全体を映す
   const [initialView] = useState(() => camera ?? boundsOf(cases));
@@ -82,11 +91,17 @@ export function Library({
   const selectedBook = books.find((b) => b.id === selectedId);
   const selectedCase =
     selection?.kind === "case" ? cases.find((c) => c.key === selection.key) : undefined;
-  const saveSettingsLater = useDebouncedSettingsSave();
+  const saveSettingsLater = useDebouncedSave(updateBookcaseSettings, "本棚の設定");
+  const saveNameLater = useDebouncedSave(renameBookcase, "本棚の名前");
 
   const changeSettings = (key: string, next: BookcaseSettings) => {
     setSettingsMap((prev) => ({ ...prev, [key]: next }));
     saveSettingsLater(key, next);
+  };
+
+  const changeName = (key: string, name: string) => {
+    setRenamed((prev) => ({ ...prev, [key]: name }));
+    saveNameLater(key, name);
   };
 
   // 本棚のドラッグ。動かした直後のクリック（本棚へ寄る・本を選ぶ）は無視する
@@ -258,6 +273,7 @@ export function Library({
           key={selectedCase.key}
           bookcase={selectedCase}
           onChange={(next) => changeSettings(selectedCase.key, next)}
+          onRename={(name) => changeName(selectedCase.key, name)}
           onClose={() => setSelection(null)}
         />
       )}
@@ -265,25 +281,23 @@ export function Library({
   );
 }
 
-const SETTINGS_SAVE_DELAY_MS = 400;
+const INSPECTOR_SAVE_DELAY_MS = 400;
 
-/** 本棚の設定は入力が落ち着いてから本棚ごとに保存する */
-function useDebouncedSettingsSave() {
+/** インスペクターで変えた値は、入力が落ち着いてから本棚ごとに保存する */
+function useDebouncedSave<T>(save: (key: string, value: T) => Promise<void>, what: string) {
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   useEffect(() => {
     const pending = timers.current;
     return () => pending.forEach(clearTimeout);
   }, []);
-  return (key: string, settings: BookcaseSettings) => {
+  return (key: string, value: T) => {
     clearTimeout(timers.current.get(key));
     timers.current.set(
       key,
       setTimeout(() => {
         timers.current.delete(key);
-        updateBookcaseSettings(key, settings).catch((err) =>
-          console.error("本棚の設定を保存できませんでした", err),
-        );
-      }, SETTINGS_SAVE_DELAY_MS),
+        save(key, value).catch((err) => console.error(`${what}を保存できませんでした`, err));
+      }, INSPECTOR_SAVE_DELAY_MS),
     );
   };
 }
