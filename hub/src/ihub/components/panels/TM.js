@@ -32,6 +32,7 @@ function Diagram (props) {
                 x: 400.0,
                 y: 400.0,
             },
+            grid: { draw: false },
             svg: {
                 style: {
                     background: '#fff',

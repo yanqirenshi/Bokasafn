@@ -29,6 +29,7 @@ function Diagram (props) {
             x: 1000.0,
             y: 100.0,
         },
+        grid: { draw: false },
     }));
     const [graph_data, setGraphData] = React.useState(false);
 
