@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "ER 図のテーブルの中のカラム",
+    "description": "テーブルが持つカラム。テーブルやカラムとの結び付きは relationships に置く。",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "_id":           { "type": "integer" },
+            "code":          { "type": "string" },
+            "physical_name": { "type": "string" },
+            "logical_name":  { "type": "string" },
+            "data_type":     { "type": "string" },
+            "column_type":   { "type": "string", "description": "IDENTIFIER (識別子) や ATTRIBUTE (属性) など" },
+            "description":   { "type": "string" },
+            "_class":        { "const": "COLUMN-INSTANCE" }
+        },
+        "required": ["_id", "code", "logical_name", "data_type", "column_type", "_class"],
+        "additionalProperties": false
+    }
+}

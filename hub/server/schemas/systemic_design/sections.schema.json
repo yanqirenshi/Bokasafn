@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Systemic Design の章とカード",
+    "description": "Systemic Design のページに並べる章と、章ごとのカード。imgs は public/systemic_design/ の画像のファイル名。",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "label": { "type": "string" },
+            "cards": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "code":  { "type": ["string", "null"], "description": "内容のページ (/systemic-design/:name) の名前。ページが無いものは null" },
+                        "label": { "type": "string" },
+                        "imgs":  { "type": "array", "items": { "type": "string" } }
+                    },
+                    "required": ["code", "label"],
+                    "additionalProperties": false
+                }
+            }
+        },
+        "required": ["label", "cards"],
+        "additionalProperties": false
+    }
+}

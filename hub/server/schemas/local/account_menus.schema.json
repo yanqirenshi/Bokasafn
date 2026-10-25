@@ -1,0 +1,11 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "サイドメニューの表示/非表示 (個人の設定)",
+    "description": "ドックの Z から切り替えた、サイドメニューの項目の on/off。{ ページの label: { 項目の code: true/false } } の形で、既定値 (src/config/ACCOUNT_MENUS.js の active) と違うものだけを持つ。git で共有しない。",
+    "type": "object",
+    "default": {},
+    "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "type": "boolean" }
+    }
+}

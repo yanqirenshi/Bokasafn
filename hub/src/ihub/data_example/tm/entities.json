@@ -1,0 +1,86 @@
+[
+    {
+        "id": 30000,
+        "type": "RESOURCE",
+        "name": "Firebase Auth",
+        "description": "User",
+        "position": {
+            "x": -300,
+            "y": -100,
+            "z": 0
+        },
+        "size": {
+            "w": 0,
+            "h": 0
+        },
+        "identifiers": [
+            {
+                "id": 100,
+                "identifier": 10000
+            }
+        ],
+        "attributes": []
+    },
+    {
+        "id": 30001,
+        "type": "RESOURCE",
+        "name": "Firebase Auth Provider",
+        "description": "User",
+        "position": {
+            "x": -300,
+            "y": 100,
+            "z": 0
+        },
+        "size": {
+            "w": 0,
+            "h": 0
+        },
+        "identifiers": [
+            {
+                "id": 103,
+                "identifier": 10001
+            }
+        ],
+        "attributes": [
+            {
+                "id": 400,
+                "attribute": 20000
+            }
+        ]
+    },
+    {
+        "id": 30002,
+        "type": "EVENT",
+        "name": "Firebase Auth Provider 認証",
+        "description": "",
+        "position": {
+            "x": 100,
+            "y": -100,
+            "z": 0
+        },
+        "size": {
+            "w": 0,
+            "h": 0
+        },
+        "identifiers": [
+            {
+                "id": 101,
+                "identifier": 10000
+            },
+            {
+                "id": 102,
+                "identifier": 10001
+            }
+        ],
+        "attributes": [
+            {
+                "id": 300,
+                "attribute": 20002
+            },
+            {
+                "id": 301,
+                "attribute": 20003
+            }
+        ]
+    }
+]

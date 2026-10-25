@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "ER 図のカラム",
+    "description": "テーブルをまたいで共通に使うカラムの定義。テーブルの中のカラムは column_instances に置く。",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "_id":       { "type": "integer" },
+            "code":      { "type": "string" },
+            "name":      { "type": "string" },
+            "data_type": { "type": "string" },
+            "_class":    { "const": "COLUMN" }
+        },
+        "required": ["_id", "code", "name", "data_type", "_class"],
+        "additionalProperties": false
+    }
+}

@@ -6,6 +6,13 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "hub",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "hub", "run", "start"],
+      "port": 3100,
+      "env": { "PORT": "3100", "BROWSER": "none" }
     }
   ]
 }

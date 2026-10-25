@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "システム構成図の線",
+    "description": "ノードの間の線。from.id/to.id はノード (子のノードを含む) の id を指す。position はポートを取り付ける角度。",
+    "x-id-start": 100,
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id":   { "type": "integer" },
+            "from": { "$ref": "#/$defs/end" },
+            "to":   { "$ref": "#/$defs/end" },
+            "port": { "type": "number" }
+        },
+        "required": ["id", "from", "to"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "end": {
+            "type": "object",
+            "properties": {
+                "id":       { "type": "integer" },
+                "position": { "type": "number" }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+        }
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "画面遷移図のノード",
+    "description": "d3.sitemap に渡す画面のノード。children に子のノードを入れ子で持つ。id は子のノードも含めて一意にする。",
+    "x-id-start": 1000000,
+    "type": "array",
+    "items": { "$ref": "#/$defs/node" },
+    "$defs": {
+        "node": {
+            "type": "object",
+            "properties": {
+                "id":   { "type": "integer" },
+                "type": { "const": "NODE" },
+                "label": {
+                    "type": "object",
+                    "properties": {
+                        "contents": { "type": "string" },
+                        "position": { "$ref": "#/$defs/point" },
+                        "font":     { "$ref": "#/$defs/font" }
+                    },
+                    "required": ["contents"],
+                    "additionalProperties": false
+                },
+                "size":     { "$ref": "#/$defs/size" },
+                "position": { "$ref": "#/$defs/point" },
+                "link": {
+                    "type": "object",
+                    "properties": {
+                        "icon":     { "type": "string" },
+                        "position": { "$ref": "#/$defs/point" },
+                        "url":      { "type": "string" }
+                    },
+                    "required": ["url"],
+                    "additionalProperties": false
+                },
+                "node_type": { "type": "string", "description": "window など" },
+                "children":  { "type": "array", "items": { "$ref": "#/$defs/node" } }
+            },
+            "required": ["id", "type", "label", "size", "position"],
+            "additionalProperties": false
+        },
+        "point": {
+            "type": "object",
+            "properties": {
+                "x": { "type": "number" },
+                "y": { "type": "number" }
+            },
+            "required": ["x", "y"],
+            "additionalProperties": false
+        },
+        "size": {
+            "type": "object",
+            "properties": {
+                "w": { "type": "number" },
+                "h": { "type": "number" }
+            },
+            "required": ["w", "h"],
+            "additionalProperties": false
+        },
+        "font": {
+            "type": "object",
+            "properties": {
+                "size":   { "type": "number" },
+                "color":  { "type": "string" },
+                "weight": { "type": ["string", "number"] }
+            },
+            "additionalProperties": false
+        }
+    }
+}

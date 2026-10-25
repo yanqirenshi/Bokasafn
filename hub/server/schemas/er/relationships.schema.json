@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "ER 図の結び付き",
+    "description": "テーブル・カラム・ポートの間の結び付き。from_id/to_id は、from_class/to_class の種類のデータの _id を指す。",
+    "x-id-start": 10000000,
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "_id":        { "type": "integer" },
+            "_class":     { "const": "EDGE-ER" },
+            "from_id":    { "type": "integer" },
+            "from_class": { "$ref": "#/$defs/class" },
+            "to_id":      { "type": "integer" },
+            "to_class":   { "$ref": "#/$defs/class" },
+            "data_type":  { "type": "string", "description": "FK (外部キー)・HAVE (持つ)・INSTANCE-OF (カラムの実体) など" },
+            "hide":       { "type": "boolean" }
+        },
+        "required": ["_id", "_class", "from_id", "from_class", "to_id", "to_class", "data_type"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "class": { "enum": ["TABLE", "COLUMN", "COLUMN-INSTANCE", "PORT-ER-OUT", "PORT-ER-IN"] }
+    }
+}

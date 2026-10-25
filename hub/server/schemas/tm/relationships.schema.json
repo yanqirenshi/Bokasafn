@@ -1,0 +1,74 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "TM のリレーションシップ",
+    "description": "エンティティの間の結線。from.entity/to.entity はエンティティの id を指す。同じエンティティを指すと自己結線 (ループ) になる。",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id":   { "type": "integer" },
+            "type": { "type": ["string", "null"] },
+            "from": { "$ref": "#/$defs/end" },
+            "to":   { "$ref": "#/$defs/end" },
+            "details": {
+                "description": "ポートを取り付けるカラム。from.id/to.id は識別子・属性のインスタンスの id を指す。省略すると先頭の識別子に取り付く",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "from": { "$ref": "#/$defs/detail_end" },
+                        "to":   { "$ref": "#/$defs/detail_end" }
+                    },
+                    "required": ["from", "to"],
+                    "additionalProperties": false
+                }
+            },
+            "subset": {
+                "description": "サブセットへの結線に表示する区分コード (same は =、different は ×)",
+                "type": "object",
+                "properties": {
+                    "kind": { "enum": ["same", "different"] },
+                    "code": { "type": "string" }
+                },
+                "required": ["kind", "code"],
+                "additionalProperties": false
+            },
+            "mapping": {
+                "description": "結線の中点から垂下する対応表・対照表・再帰表。entity はエンティティの id を指す",
+                "type": "object",
+                "properties": {
+                    "entity": { "type": "integer" }
+                },
+                "required": ["entity"],
+                "additionalProperties": false
+            },
+            "label":       { "type": "string" },
+            "description": { "type": "string" }
+        },
+        "required": ["id", "from", "to"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "end": {
+            "type": "object",
+            "properties": {
+                "id":          { "type": "integer", "description": "端点の識別子のインスタンスの id" },
+                "entity":      { "type": "integer" },
+                "cardinality": { "enum": [1, 3], "description": "1 か 多 (3)" },
+                "optionality": { "enum": [0, 1], "description": "0 は任意 (○)、1 は必須 (横棒)" },
+                "position":    { "type": "number", "description": "ポートを取り付ける角度 (0 が真下で時計回り。90 が左、180 が真上、270 が右)" }
+            },
+            "required": ["entity"],
+            "additionalProperties": false
+        },
+        "detail_end": {
+            "type": "object",
+            "properties": {
+                "id":          { "type": "integer" },
+                "description": { "type": "string" }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "WBS のプロジェクト",
+    "description": "WBS の最上位のノード。id は wbs・workpackages とまたいで一意にする。(URL の /wbs/:wbs_id とページのファイル名 P{id}.js に使う)",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id":          { "type": "integer" },
+            "name":        { "type": "string" },
+            "description": { "$ref": "#/$defs/description" },
+            "type":        { "type": ["string", "null"], "description": "ページのファイルを置くフォルダ (src/wbs/{type}/P{id}.js)" }
+        },
+        "required": ["id", "name"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "description": {
+            "description": "文字列、または段落ごとの文字列の配列",
+            "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+            ]
+        }
+    }
+}

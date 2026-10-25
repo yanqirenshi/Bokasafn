@@ -1,0 +1,34 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "TM の識別子のマスタ",
+    "description": "d3.ter の識別子 (個体指定子) のマスタ。entities の identifiers[].identifier から id で参照される。id は 10000 番台を使う。",
+    "x-id-start": 10000,
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id":          { "type": "integer" },
+            "name":        { "$ref": "#/$defs/name" },
+            "description": { "type": "string" }
+        },
+        "required": ["id", "name"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "name": {
+            "description": "文字列、または論理名と物理名の組",
+            "oneOf": [
+                { "type": "string" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "logical":     { "type": "string" },
+                        "physical":    { "type": "string" },
+                        "description": { "type": "string" }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        }
+    }
+}

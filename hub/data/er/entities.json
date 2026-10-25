@@ -1,0 +1,87 @@
+[
+    {
+        "_id": 1,
+        "code": "books",
+        "name": "本",
+        "physical_name": "books",
+        "description": "本",
+        "_class": "TABLE",
+        "position": {
+            "x": -450,
+            "y": -250,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
+    },
+    {
+        "_id": 2,
+        "code": "sections",
+        "name": "章・節",
+        "physical_name": "sections",
+        "description": "本の章・節（parent_id で入れ子）",
+        "_class": "TABLE",
+        "position": {
+            "x": -76,
+            "y": -186,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
+    },
+    {
+        "_id": 3,
+        "code": "bookcase_positions",
+        "name": "本棚の位置",
+        "physical_name": "bookcase_positions",
+        "description": "本棚の画面上の位置（ドラッグで動かした本棚だけ）",
+        "_class": "TABLE",
+        "position": {
+            "x": -78,
+            "y": 261,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
+    },
+    {
+        "_id": 4,
+        "code": "bookcase",
+        "name": "本棚",
+        "physical_name": "bookcase",
+        "description": "本棚ごとの段数と最小横幅",
+        "_class": "TABLE",
+        "position": {
+            "x": -433,
+            "y": 261,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
+    },
+    {
+        "_id": 5,
+        "code": "camera_views",
+        "name": "カメラ",
+        "physical_name": "camera_views",
+        "description": "本棚画面のカメラ（SVG の viewBox）",
+        "_class": "TABLE",
+        "position": {
+            "x": 250,
+            "y": 250,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
+    }
+]

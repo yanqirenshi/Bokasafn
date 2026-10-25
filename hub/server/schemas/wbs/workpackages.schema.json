@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "WBS のワークパッケージ",
+    "description": "WBS の下のワークパッケージ。parent は WBS の id。id は projects・wbs とまたいで一意にする。_class は読み込み時に付けるので、データには書かない。",
+    "x-id-start": 1000000,
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id":          { "type": "integer" },
+            "parent":      { "type": "integer" },
+            "name":        { "type": "string" },
+            "description": { "$ref": "#/$defs/description" },
+            "type":        { "type": ["string", "null"], "description": "ページのファイルを置くフォルダ (src/wbs/{type}/P{id}.js)" }
+        },
+        "required": ["id", "parent", "name"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "description": {
+            "description": "文字列、または段落ごとの文字列の配列",
+            "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+            ]
+        }
+    }
+}

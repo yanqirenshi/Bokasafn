@@ -1,0 +1,99 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "TM のエンティティ",
+    "description": "d3.ter のエンティティ。id は 30000 番台、identifiers[].id は 40000 番台、attributes[].id は 50000 番台を使う。(今のデータには、この範囲に入っていない id もある)",
+    "x-id-start": 30000,
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": { "type": "integer" },
+            "type": {
+                "description": "これ以外の値は、d3.ter が描画するときに例外になる",
+                "enum": [
+                    "RESOURCE",
+                    "RESOURCE-SUBSET",
+                    "EVENT",
+                    "EVENT-SUBSET",
+                    "COMPARATIVE",
+                    "CORRESPONDENCE",
+                    "RECURSION",
+                    "MANY-VALUED-OR",
+                    "MANY-VALUED-AND",
+                    "CLASS"
+                ]
+            },
+            "name":        { "$ref": "#/$defs/name" },
+            "description": { "type": "string" },
+            "position": {
+                "type": "object",
+                "properties": {
+                    "x": { "type": "number" },
+                    "y": { "type": "number" },
+                    "z": { "type": "number" }
+                },
+                "required": ["x", "y"],
+                "additionalProperties": false
+            },
+            "size": {
+                "description": "w/h に 0 を入れると、内容に合わせた大きさになる",
+                "type": "object",
+                "properties": {
+                    "w": { "type": "number" },
+                    "h": { "type": "number" }
+                },
+                "required": ["w", "h"],
+                "additionalProperties": false
+            },
+            "identifiers": {
+                "description": "エンティティが持つ識別子。identifier は identifiers.json の id を指す",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id":          { "type": "integer" },
+                        "identifier":  { "type": "integer" },
+                        "name":        { "$ref": "#/$defs/name" },
+                        "description": { "type": "string" }
+                    },
+                    "required": ["id", "identifier"],
+                    "additionalProperties": false
+                }
+            },
+            "attributes": {
+                "description": "エンティティが持つ属性。attribute は attributes.json の id を指す",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id":          { "type": "integer" },
+                        "attribute":   { "type": "integer" },
+                        "name":        { "$ref": "#/$defs/name" },
+                        "description": { "type": "string" }
+                    },
+                    "required": ["id", "attribute"],
+                    "additionalProperties": false
+                }
+            }
+        },
+        "required": ["id", "type", "name", "position", "size", "identifiers", "attributes"],
+        "additionalProperties": false
+    },
+    "$defs": {
+        "name": {
+            "description": "文字列、または論理名と物理名の組",
+            "oneOf": [
+                { "type": "string" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "logical":     { "type": "string" },
+                        "physical":    { "type": "string" },
+                        "description": { "type": "string" }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "ER 図のテーブル",
+    "description": "d3.er のテーブル。位置と大きさは position と size に持つ。(d3.er に渡すときに x/y/z と w/h へ写す)",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "_id":         { "type": "integer" },
+            "code":        { "type": "string" },
+            "name":        { "type": "string", "description": "論理名。図に出す名前" },
+            "physical_name": { "type": "string", "description": "物理名 (DB のテーブル名)" },
+            "description": { "type": "string" },
+            "_class":      { "const": "TABLE" },
+            "position": {
+                "type": "object",
+                "properties": {
+                    "x": { "type": "number" },
+                    "y": { "type": "number" },
+                    "z": { "type": "number" }
+                },
+                "required": ["x", "y"],
+                "additionalProperties": false
+            },
+            "size": {
+                "type": "object",
+                "properties": {
+                    "w": { "type": "number" },
+                    "h": { "type": "number" }
+                },
+                "required": ["w", "h"],
+                "additionalProperties": false
+            }
+        },
+        "required": ["_id", "code", "name", "_class", "position", "size"],
+        "additionalProperties": false
+    }
+}
