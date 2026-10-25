@@ -75,7 +75,7 @@ const ACCOUNT_MENU_ITEMS = [
 // ドックの Z から切り替えた on/off は、個人の設定として data/local/account_menus.json に保存し、既定値より優先する。
 export const ACCOUNT_MENU_PAGES = [
     {
-        label: 'iHub',
+        label: 'main',
         items: [
             { code: 'cockpit',                        active: true },
             { code: 'markets',                        active: true },

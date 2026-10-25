@@ -10,19 +10,19 @@
 //
 // サイドメニューの色は、src/config/ACCOUNT_MENU_COLORS.js で決めたときは、そちらを使う。
 //
-// iHub の配色は「梅紫と藤鼠」(雅・同系色でまとめる)。
+// bokasafn の配色は「桜と竹」(春らしいやわらかな配色)。
 const COLORS = {
-    // 地の色。白藤
-    base: '#F4F1F6',
+    // 地の色。桜色
+    base: '#FEF4F4',
 
-    // 主の色。滅紫
-    main: '#574C57',
+    // 主の色。墨色
+    main: '#595857',
 
-    // 補助の色。藤鼠
-    sub: '#A6A5C4',
+    // 補助の色。青竹色
+    sub: '#7EBEA5',
 
-    // 差し色。梅紫
-    accent: '#9D5B8B',
+    // 差し色。薄紅
+    accent: '#F0908D',
 };
 
 export default COLORS;

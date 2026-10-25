@@ -7,7 +7,7 @@ import * as page_docs from './ihub/components/pages/docs/index.js';
 export default function Router () {
     return (
         <Routes>
-          {/* == iHub ================================================================ */}
+          {/* == bokasafn============================================================ */}
           <Route path='/' element={<page.Cockpit/>} />
           <Route path='/help'                      element={<page.Help/>} />
           <Route path='/markets'                   element={<page.Markets/>} />

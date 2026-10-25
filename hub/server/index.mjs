@@ -22,7 +22,7 @@ const app = createApp({
 
 // このパソコンの中からだけ使えるように、127.0.0.1 で待ち受ける。
 serve({ fetch: app.fetch, port: PORT, hostname: '127.0.0.1' }, info=> {
-    console.log(`iHub の API サーバーを起動しました: http://127.0.0.1:${info.port}/api/data`);
+    console.log(`bokasafn の API サーバーを起動しました: http://127.0.0.1:${info.port}/api/data`);
 
     if (STATIC)
         console.log(`画面: http://127.0.0.1:${info.port}/`);
