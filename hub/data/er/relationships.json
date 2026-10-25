@@ -62,7 +62,7 @@
     {
         "_id": 10000006,
         "_class": "EDGE-ER",
-        "from_id": 1,
+        "from_id": 72,
         "from_class": "TABLE",
         "to_id": 13,
         "to_class": "COLUMN-INSTANCE",
@@ -765,6 +765,166 @@
         "from_id": 44,
         "from_class": "COLUMN-INSTANCE",
         "to_id": 70,
+        "to_class": "PORT-ER-IN",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000077,
+        "_class": "EDGE-ER",
+        "from_id": 71,
+        "from_class": "TABLE",
+        "to_id": 75,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000078,
+        "_class": "EDGE-ER",
+        "from_id": 6,
+        "from_class": "COLUMN",
+        "to_id": 75,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "INSTANCE-OF",
+        "hide": false
+    },
+    {
+        "_id": 10000079,
+        "_class": "EDGE-ER",
+        "from_id": 71,
+        "from_class": "TABLE",
+        "to_id": 76,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000080,
+        "_class": "EDGE-ER",
+        "from_id": 73,
+        "from_class": "COLUMN",
+        "to_id": 76,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "INSTANCE-OF",
+        "hide": false
+    },
+    {
+        "_id": 10000081,
+        "_class": "EDGE-ER",
+        "from_id": 72,
+        "from_class": "TABLE",
+        "to_id": 77,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000082,
+        "_class": "EDGE-ER",
+        "from_id": 33,
+        "from_class": "COLUMN",
+        "to_id": 77,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "INSTANCE-OF",
+        "hide": false
+    },
+    {
+        "_id": 10000083,
+        "_class": "EDGE-ER",
+        "from_id": 72,
+        "from_class": "TABLE",
+        "to_id": 78,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000084,
+        "_class": "EDGE-ER",
+        "from_id": 74,
+        "from_class": "COLUMN",
+        "to_id": 78,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "INSTANCE-OF",
+        "hide": false
+    },
+    {
+        "_id": 10000085,
+        "_class": "EDGE-ER",
+        "from_id": 72,
+        "from_class": "TABLE",
+        "to_id": 79,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000086,
+        "_class": "EDGE-ER",
+        "from_id": 22,
+        "from_class": "COLUMN",
+        "to_id": 79,
+        "to_class": "COLUMN-INSTANCE",
+        "data_type": "INSTANCE-OF",
+        "hide": false
+    },
+    {
+        "_id": 10000087,
+        "_class": "EDGE-ER",
+        "from_id": 80,
+        "from_class": "PORT-ER-OUT",
+        "to_id": 81,
+        "to_class": "PORT-ER-IN",
+        "data_type": "FK",
+        "hide": false
+    },
+    {
+        "_id": 10000088,
+        "_class": "EDGE-ER",
+        "from_id": 7,
+        "from_class": "COLUMN-INSTANCE",
+        "to_id": 80,
+        "to_class": "PORT-ER-OUT",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000089,
+        "_class": "EDGE-ER",
+        "from_id": 77,
+        "from_class": "COLUMN-INSTANCE",
+        "to_id": 81,
+        "to_class": "PORT-ER-IN",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000090,
+        "_class": "EDGE-ER",
+        "from_id": 82,
+        "from_class": "PORT-ER-OUT",
+        "to_id": 83,
+        "to_class": "PORT-ER-IN",
+        "data_type": "FK",
+        "hide": false
+    },
+    {
+        "_id": 10000091,
+        "_class": "EDGE-ER",
+        "from_id": 75,
+        "from_class": "COLUMN-INSTANCE",
+        "to_id": 82,
+        "to_class": "PORT-ER-OUT",
+        "data_type": "HAVE",
+        "hide": false
+    },
+    {
+        "_id": 10000092,
+        "_class": "EDGE-ER",
+        "from_id": 13,
+        "from_class": "COLUMN-INSTANCE",
+        "to_id": 83,
         "to_class": "PORT-ER-IN",
         "data_type": "HAVE",
         "hide": false

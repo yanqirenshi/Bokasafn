@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { formatAuthors } from "@/lib/authors";
 import type { ShelfBook } from "@/lib/books";
 import styles from "./Inspector.module.css";
 
@@ -28,10 +29,10 @@ export function Inspector({ book, onClose }: { book: ShelfBook; onClose: () => v
 
       <h2 className={styles.title}>{book.title}</h2>
       <dl className={styles.meta}>
-        {book.author && (
+        {book.authors.length > 0 && (
           <>
             <dt>著者</dt>
-            <dd>{book.author}</dd>
+            <dd>{formatAuthors(book.authors)}</dd>
           </>
         )}
         {book.era && (

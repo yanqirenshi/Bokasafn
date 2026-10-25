@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OpenBook } from "@/components/OpenBook";
 import { Toc } from "@/components/Toc";
+import { formatAuthors } from "@/lib/authors";
 import { getBook, listSections } from "@/lib/books";
 import styles from "../book.module.css";
 
@@ -24,10 +25,10 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
         <div className={styles.titlePage}>
           <h1 className={styles.bookTitle}>{book.title}</h1>
           <dl className={styles.meta}>
-            {book.author && (
+            {book.authors.length > 0 && (
               <>
                 <dt>著者</dt>
-                <dd>{book.author}</dd>
+                <dd>{formatAuthors(book.authors)}</dd>
               </>
             )}
             {book.era && (

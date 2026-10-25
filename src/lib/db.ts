@@ -1,6 +1,7 @@
 import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
+import { parseAuthors, type AuthorCredit } from "./authors";
 import { DEFAULT_BOOKCASE_SETTINGS } from "./bookcase-settings";
 
 export const DB_PATH =
@@ -11,7 +12,6 @@ CREATE TABLE IF NOT EXISTS books (
   id           INTEGER PRIMARY KEY,
   slug         TEXT    NOT NULL UNIQUE,
   title        TEXT    NOT NULL,
-  author       TEXT,
   era          TEXT,
   category     TEXT    NOT NULL,
   description  TEXT,
@@ -35,6 +35,23 @@ CREATE TABLE IF NOT EXISTS sections (
 );
 
 CREATE INDEX IF NOT EXISTS sections_book ON sections(book_id, position);
+
+-- 著者。複数の本を書いた人も一行にまとめる。
+CREATE TABLE IF NOT EXISTS authors (
+  id    INTEGER PRIMARY KEY,
+  name  TEXT    NOT NULL UNIQUE
+);
+
+-- 本と著者の対応。役割は 著・編・注・託名 のいずれか。position は本の中での著者の並び順。
+CREATE TABLE IF NOT EXISTS book_authors (
+  book_id    INTEGER NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+  author_id  INTEGER NOT NULL REFERENCES authors(id),
+  role       TEXT    NOT NULL,
+  position   INTEGER NOT NULL,
+  PRIMARY KEY (book_id, author_id)
+);
+
+CREATE INDEX IF NOT EXISTS book_authors_author ON book_authors(author_id);
 
 -- 本棚ごとの設定。段数と最小横幅（本が入りきらなければ横幅はこれより広がる）。
 CREATE TABLE IF NOT EXISTS bookcase (
@@ -97,6 +114,38 @@ function addBookcasePositionsForeignKey(db: Database.Database) {
   })();
 }
 
+/** 本に著者を並び順どおりに結び付ける。著者がまだ無ければ作る */
+export function addBookAuthors(
+  db: Database.Database,
+  bookId: number | bigint,
+  credits: AuthorCredit[],
+) {
+  const insertAuthor = db.prepare("INSERT OR IGNORE INTO authors (name) VALUES (?)");
+  const findAuthor = db.prepare("SELECT id FROM authors WHERE name = ?");
+  const link = db.prepare(
+    "INSERT OR IGNORE INTO book_authors (book_id, author_id, role, position) VALUES (?, ?, ?, ?)",
+  );
+  credits.forEach(({ name, role }, i) => {
+    insertAuthor.run(name);
+    const { id } = findAuthor.get(name) as { id: number };
+    link.run(bookId, id, role, i);
+  });
+}
+
+// 以前の books.author（著者の文字列）を、authors と book_authors に移してから列を消す。
+function moveAuthorsOutOfBooks(db: Database.Database) {
+  const columns = db.prepare("PRAGMA table_info(books)").all() as { name: string }[];
+  if (!columns.some((c) => c.name === "author")) return;
+  db.transaction(() => {
+    const books = db.prepare("SELECT id, author FROM books").all() as {
+      id: number;
+      author: string | null;
+    }[];
+    for (const book of books) addBookAuthors(db, book.id, parseAuthors(book.author));
+    db.exec("ALTER TABLE books DROP COLUMN author");
+  })();
+}
+
 let db: Database.Database | undefined;
 
 export function getDb(): Database.Database {
@@ -108,6 +157,7 @@ export function getDb(): Database.Database {
     renameOldTables(db);
     db.exec(SCHEMA);
     addBookcasePositionsForeignKey(db);
+    moveAuthorsOutOfBooks(db);
   }
   return db;
 }

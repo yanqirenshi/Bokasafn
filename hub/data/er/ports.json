@@ -40,5 +40,33 @@
         "degree": 90,
         "cardinality": 1,
         "optionality": 0
+    },
+    {
+        "_id": 80,
+        "_class": "PORT-ER-OUT",
+        "degree": 90,
+        "cardinality": 1,
+        "optionality": 1
+    },
+    {
+        "_id": 81,
+        "_class": "PORT-ER-IN",
+        "degree": 270,
+        "cardinality": 3,
+        "optionality": 0
+    },
+    {
+        "_id": 82,
+        "_class": "PORT-ER-OUT",
+        "degree": 270,
+        "cardinality": 1,
+        "optionality": 1
+    },
+    {
+        "_id": 83,
+        "_class": "PORT-ER-IN",
+        "degree": 90,
+        "cardinality": 3,
+        "optionality": 1
     }
 ]

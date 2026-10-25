@@ -22,9 +22,9 @@
     },
     {
         "_id": 12,
-        "code": "author",
-        "name": "著者",
-        "data_type": "TEXT",
+        "code": "author_id",
+        "name": "著者ID",
+        "data_type": "INTEGER",
         "_class": "COLUMN"
     },
     {
@@ -172,6 +172,20 @@
         "code": "h",
         "name": "高さ",
         "data_type": "REAL",
+        "_class": "COLUMN"
+    },
+    {
+        "_id": 73,
+        "code": "name",
+        "name": "名前",
+        "data_type": "TEXT",
+        "_class": "COLUMN"
+    },
+    {
+        "_id": 74,
+        "code": "role",
+        "name": "役割",
+        "data_type": "TEXT",
         "_class": "COLUMN"
     }
 ]

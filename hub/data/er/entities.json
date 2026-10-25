@@ -83,5 +83,39 @@
             "w": 222,
             "h": 333
         }
+    },
+    {
+        "_id": 71,
+        "code": "authors",
+        "name": "著者",
+        "physical_name": "authors",
+        "description": "著者（複数の本を書いた人も一行）",
+        "_class": "TABLE",
+        "position": {
+            "x": -1033,
+            "y": -333,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
+    },
+    {
+        "_id": 72,
+        "code": "book_authors",
+        "name": "本の著者",
+        "physical_name": "book_authors",
+        "description": "本と著者の対応（役割は 著・編・注・託名）",
+        "_class": "TABLE",
+        "position": {
+            "x": -749,
+            "y": -279,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        }
     }
 ]

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { moveBookcase, saveLibraryCamera, updateBookcaseSettings } from "@/app/actions";
+import { formatAuthors } from "@/lib/authors";
 import type { BookcaseSettings } from "@/lib/bookcase-settings";
 import type { BookcasePositions, BookcaseSettingsMap, CameraView } from "@/lib/bookcases";
 import { BookcaseInspector } from "./BookcaseInspector";
@@ -416,7 +417,7 @@ function SpineView({
       data-selected={selected || undefined}
       role="button"
       tabIndex={0}
-      aria-label={`${book.title}${book.author ? `（${book.author}）` : ""}`}
+      aria-label={`${book.title}${book.authors.length ? `（${formatAuthors(book.authors)}）` : ""}`}
       aria-pressed={selected}
       onClick={(e) => {
         e.stopPropagation();

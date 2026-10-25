@@ -10,12 +10,14 @@ import * as cheerio from "cheerio";
 import type { AnyNode, Element } from "domhandler";
 import fs from "node:fs";
 import path from "node:path";
-import { getDb } from "../src/lib/db";
+import { parseAuthors } from "../src/lib/authors";
+import { addBookAuthors, getDb } from "../src/lib/db";
 
 type BookConfig = {
   slug: string;
   page: string;
   title: string;
+  /** 著者。「張仲景」「託名 黃帝・岐伯」「戴聖 編」のように書く（src/lib/authors.ts で分ける） */
   author: string;
   era: string;
   description: string;
@@ -32,7 +34,7 @@ const MEDICINE: BookConfig[] = [
     slug: "huangdi-neijing",
     page: "黃帝內經",
     title: "黃帝內經",
-    author: "佚名（託名 黃帝・岐伯）",
+    author: "託名 黃帝・岐伯",
     era: "戰國〜西漢",
     description: "現存最古の中国医学の理論書。素問と靈樞の二部からなる。",
     spineColor: "#7a2e2a",
@@ -51,7 +53,7 @@ const MEDICINE: BookConfig[] = [
     slug: "shennong-bencao-jing",
     page: "神農本草經",
     title: "神農本草經",
-    author: "佚名（託名 神農）",
+    author: "託名 神農",
     era: "東漢",
     description: "現存最古の本草書。三百六十五種の薬物を上・中・下の三品に分ける。",
     spineColor: "#5b4a1f",
@@ -700,9 +702,9 @@ function prune(node: SectionNode): SectionNode | undefined {
 function save(book: BookConfig & { category: string }, position: number, tree: SectionNode) {
   const db = getDb();
   const insertBook = db.prepare(`
-    INSERT INTO books (slug, title, author, era, category, description, spine_color, position,
+    INSERT INTO books (slug, title, era, category, description, spine_color, position,
                        source_name, source_url, license, imported_at)
-    VALUES (@slug, @title, @author, @era, @category, @description, @spineColor, @position,
+    VALUES (@slug, @title, @era, @category, @description, @spineColor, @position,
             '維基文庫', @sourceUrl, 'Public domain', datetime('now'))`);
   const insertSection = db.prepare(`
     INSERT INTO sections (book_id, parent_id, position, depth, title, body)
@@ -716,6 +718,7 @@ function save(book: BookConfig & { category: string }, position: number, tree: S
       position,
       sourceUrl: pageUrl(book.page),
     }).lastInsertRowid;
+    addBookAuthors(db, bookId, parseAuthors(book.author));
 
     const walk = (node: SectionNode, parentId: number | bigint | null, depth: number) => {
       const id = insertSection.run(bookId, parentId, count++, depth, node.title, node.body)
@@ -728,6 +731,10 @@ function save(book: BookConfig & { category: string }, position: number, tree: S
     const lead = tree.body.trim();
     if (lead && lead !== book.title) walk({ title: leadTitle, body: tree.body, children: [] }, null, 0);
     for (const child of tree.children) walk(child, null, 0);
+    // 取り込み直しで、どの本にも結び付かなくなった著者を消す
+    db.prepare(
+      "DELETE FROM authors WHERE id NOT IN (SELECT author_id FROM book_authors)",
+    ).run();
   })();
   return count;
 }
