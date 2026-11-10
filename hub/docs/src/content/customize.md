@@ -174,7 +174,7 @@ function icon (d, fillRule) {
 ### そのほかの見た目
 
 `src/index.css` に、CSS を書きます。
-`src/index.css` は `src/ihub/index.css` のあとに読み込むので、iHub の見た目を上書きできます。
+`src/index.css` は、`@yanqirenshi/ihub.core` の `index.css` のあとに読み込むので、iHub の見た目を上書きできます。
 
 ## アプリの名前を出す
 
@@ -187,6 +187,5 @@ function icon (d, fillRule) {
 | `public/index.html` | `<title>` | ブラウザのタブ |
 | `package.json` | `name` | パッケージの名前 (`npm start` のログなど) |
 
-iHub 本体のフォルダ (`src/ihub/`) の名前は、アプリの名前に変えないでください。
-アプリのファイル (`src/Router.js`・`src/wbs/` など) は、`src/ihub/` の部品を読み込んでいます。
-名前を変えると、iHub を取り込むたびに、フォルダの名前と読み込むパスを置き換え直すことになります。
+画面の名前 (`src/index.js` の `config.app.name`) は、書き込んだ画面の id を送るヘッダー (`X-{名前}-Client`) にも使います。
+変えるときは、`package.json` の `start:api`・`serve` の `--app-name` も、同じ名前にしてください。(いまは `bokasafn`)

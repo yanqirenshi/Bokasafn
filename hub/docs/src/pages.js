@@ -19,7 +19,7 @@ export const SECTIONS = [
     {
         label: 'はじめに',
         pages: [
-            { path: '/',      title: 'iHub とは',    content: about },
+            { path: '/',      title: 'bokasafn とは',    content: about },
             { path: '/setup', title: '導入のしかた', content: setup },
         ],
     },

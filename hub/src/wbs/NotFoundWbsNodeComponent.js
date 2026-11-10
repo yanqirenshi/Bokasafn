@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import S from '@mui/material/Typography';
 
-import Frame from '../ihub/components/assemblies/frames/FrameWbsNode.js';
+import { FrameWbsNode as Frame } from '@yanqirenshi/ihub.core';
 
 // WBS のデータに ID はあるが、ページのコンポーネント(ファイル)が無い場合に表示する。
 // FrameWbsNode を使い、ノードの見出しと配下の WBS を表示する。

@@ -1,4 +1,4 @@
 ## pages/
 
 ユーザーが定義するコンポーネントを配置する場所です。
-プリセットされたコンポーネントは src/ihub/components/pages/ にあります。
+プリセットされたコンポーネントは @yanqirenshi/ihub.core にあります。(node_modules/@yanqirenshi/ihub.core/dist/components/pages/)

@@ -28,7 +28,7 @@
 
 ## フォーマット
 
-フォーマットは、`server/schemas/{ドメイン}/{コレクション}.schema.json` の JSON Schema で決めています。
+フォーマットは、`@yanqirenshi/ihub.srv` の `src/schemas/{ドメイン}/{コレクション}.schema.json` (`node_modules/@yanqirenshi/ihub.srv/src/schemas/`) の JSON Schema で決めています。
 各項目の説明も、スキーマの `description` に書いてあります。
 
 たとえば、`wbs/wbs.json` の 1 件は次のような形です。
@@ -66,7 +66,7 @@ WBS の id は、URL (`/wbs/{id}`) とページのファイル名 (`P{id}.js`) �
 npm run test:data
 ```
 
-- `data/` と `src/ihub/data_example/` が、スキーマとルールに合っているかを確かめます。
+- `data/` が、スキーマとルールに合っているかを確かめます。(`npm run test:data` は、`ihub-srv check data` です)
 - 合っていないときは、場所と理由を日本語で表示します。
 
 ```
@@ -83,6 +83,6 @@ sitemap/edges: to.id のノードが見つかりません。(id=2000001, to.id=1
 
 ## 雛形
 
-`src/ihub/data_example/` は、`data/` の雛形です。
+`@yanqirenshi/ihub.core` の `examples/data/` は、`data/` の雛形です。`npx ihub-srv init <フォルダ>` で、コピーできます。
 `data/` と同じフォーマットで、サンプルのデータが入っています。
 新しくアプリのドキュメントを作るときは、ここから始めてください。

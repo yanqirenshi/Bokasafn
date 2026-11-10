@@ -1,4 +1,15 @@
 /*
  * ユーザーが定義するスタイルを記述するファイルです。
- * src/ihub/index.css の後に読み込まれるため、プリセットのスタイルを上書きできます。
+ * @yanqirenshi/ihub.core の index.css の後に読み込まれるため、プリセットのスタイルを上書きできます。
  */
+
+/*
+ * ER 図と TM 図の背景のグリッド線を出さない。
+ * (コピー版では、ER 図・TM 図のパネル (ER.js・TM.js) が、d3.er・d3.ter に grid: { draw: false } を渡していた。
+ *  いまは、グリッド線を描いたあとで、CSS で隠す。ER 図の svg は g.table を、TM 図の svg は g.entity を持つ。
+ *  ほかの図 (画面遷移図など) のグリッド線は、そのまま出す)
+ */
+svg:has(g.table) .layer.background > *,
+svg:has(g.entity) .layer.background > * {
+    display: none;
+}

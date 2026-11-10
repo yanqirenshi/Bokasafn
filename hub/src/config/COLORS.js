@@ -2,7 +2,7 @@
 // 4 つの色を、CSS の色 ('#rrggbb') で書く。
 // null のときは、それぞれの部品のこれまでの色になる。
 //
-// どこに使うか (src/ihub/manegers/colors.js)
+// どこに使うか (@yanqirenshi/ihub.core の manegers/colors.js)
 //   base:   画面の背景、CSS のクラス theme-color1〜5
 //   main:   文字、MUI の primary、ドックのボタンと吹き出しの枠、サイドメニューの背景、CSS のクラス text-color1
 //   sub:    補助の文字 (MUI の text.secondary)、区切りの線、CSS のクラス text-color2

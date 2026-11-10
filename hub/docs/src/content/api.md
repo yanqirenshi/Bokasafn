@@ -1,8 +1,8 @@
 # API サーバー
 
-API サーバー (`server/`) は、`data/` の JSON を読み書きします。
+API サーバー (`@yanqirenshi/ihub.srv`) は、`data/` の JSON を読み書きします。
 画面は、この API を通してデータを読み書きします。
-詳しくは、`server/README.md` も見てください。
+詳しくは、[@yanqirenshi/ihub.srv の README](https://github.com/yanqirenshi/iHub/tree/main/packages/ihub.srv) も見てください。
 
 ## API
 
@@ -42,7 +42,7 @@ API サーバー (`server/`) は、`data/` の JSON を読み書きします。
 | `changed` | コレクションが変わりました。API での書き込みのほか、エディタや git での変更も知らせます。 |
 | `invalid` | ファイルが変わりましたが、フォーマットやルールに合っていません。 |
 
-書き込むときに `X-iHub-Client` ヘッダーで画面 (タブ) の id を送ると、`changed` にその id が付きます。
+書き込むときに `X-bokasafn-Client` ヘッダーで画面 (タブ) の id を送ると、`changed` にその id が付きます。
 画面は、自分の書き込みの通知を見分けるために使います。
 
 ## 安全のための制限
@@ -53,6 +53,12 @@ API サーバー (`server/`) は、`data/` の JSON を読み書きします。
 
 ## コレクションを足すとき
 
-1. `server/schemas/{domain}/{collection}.schema.json` を作ります。
-2. `data/{domain}/{collection}.json` と `src/ihub/data_example/{domain}/{collection}.json` を作ります。
-3. コレクションをまたぐ検査が必要なときは、`server/validation/rules.mjs` に書きます。
+hub で、API サーバーに、hub 固有のコレクション (ドメイン) や、ルートを足したいときは、`ihub-srv` ではなく、`createApp` で API サーバーを起動します。
+([iHub のマニュアル](https://github.com/yanqirenshi/iHub/blob/main/docs/src/content/api.md) の「アプリ固有のコレクションを足すとき」を見てください)
+
+1. スキーマのフォルダ (例: `server/schemas/`) に、`{domain}/{collection}.schema.json` を作ります。
+2. `data/{domain}/{collection}.json` を作ります。
+3. コレクションをまたぐ検査が必要なときは、`createApp` の `extensions.rules` に書きます。
+
+`ihub-srv check data --schemas server/schemas` で、足したスキーマも使って検証できます。
+(いまの hub は、hub 固有のコレクションを足していないので、`server/` はありません)

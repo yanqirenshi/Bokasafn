@@ -3,7 +3,7 @@ import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { DOCK_COLOR } from '../ihub/manegers/colors.js';
+import DOCK_COLOR from './dockColor.js';
 
 // ドックのボタンのアイコン。
 // Manipulater の Root は label.type が 'icon' のとき、決まった code のアイコンしか描かない。

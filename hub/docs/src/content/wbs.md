@@ -82,5 +82,5 @@ export default function P1000 (props) {
 
 ## 雛形
 
-`src/ihub/wbs_example/` に、ページのファイルの例があります。
+`@yanqirenshi/ihub.core` の `examples/wbs/` (`node_modules/@yanqirenshi/ihub.core/examples/wbs/`) に、ページのファイルの例があります。
 `src/wbs/` に置いたときの import の書き方になっているので、そのまま `src/wbs/` にコピーして使えます。
