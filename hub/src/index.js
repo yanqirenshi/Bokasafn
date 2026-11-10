@@ -47,6 +47,13 @@ const config = {
         NotFoundComponent: NotFoundWbsNodeComponent,
     },
 
+    // ER 図・TM 図の設定。grid は d3.er・d3.ter の grid の設定を、そのまま渡す。
+    // グリッド線を描かない。(コピー版では、ER 図・TM 図のパネル (ER.js・TM.js) が、grid: { draw: false } を渡していた。コミット f406e19)
+    diagrams: {
+        er: { grid: { draw: false } },
+        tm: { grid: { draw: false } },
+    },
+
     // Help の内容。(iHub の既定の 3 つの、iHub を bokasafn に書き換えたもの)
     help: { sections: [Section01, Section02, Section03] },
 

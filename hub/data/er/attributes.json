@@ -1,13 +1,5 @@
 [
     {
-        "id": 6,
-        "name": {
-            "logical": "ID",
-            "physical": "id"
-        },
-        "data_type": "INTEGER"
-    },
-    {
         "id": 8,
         "name": {
             "logical": "スラッグ",
@@ -30,14 +22,6 @@
             "physical": "title"
         },
         "data_type": "TEXT NOT NULL"
-    },
-    {
-        "id": 12,
-        "name": {
-            "logical": "著者ID",
-            "physical": "author_id"
-        },
-        "data_type": "INTEGER NOT NULL"
     },
     {
         "id": 14,
@@ -80,7 +64,7 @@
         "data_type": "INTEGER NOT NULL"
     },
     {
-        "id": 10000102,
+        "id": 10000103,
         "name": {
             "logical": "並び順",
             "physical": "position"
@@ -153,22 +137,6 @@
         "data_type": "TEXT NOT NULL"
     },
     {
-        "id": 43,
-        "name": {
-            "logical": "本棚キー",
-            "physical": "key"
-        },
-        "data_type": "TEXT"
-    },
-    {
-        "id": 10000101,
-        "name": {
-            "logical": "画面キー",
-            "physical": "key"
-        },
-        "data_type": "TEXT"
-    },
-    {
         "id": 45,
         "name": {
             "logical": "X座標",
@@ -233,7 +201,7 @@
         "data_type": "TEXT NOT NULL UNIQUE"
     },
     {
-        "id": 10000103,
+        "id": 10000104,
         "name": {
             "logical": "名前",
             "physical": "name"

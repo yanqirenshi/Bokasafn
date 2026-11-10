@@ -14,12 +14,13 @@
             "h": 333
         },
         "physical_name": "books",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 7,
-                "attribute": 6
-            },
+                "identifier": 6
+            }
+        ],
+        "attributes": [
             {
                 "id": 9,
                 "attribute": 8
@@ -85,12 +86,13 @@
             "h": 333
         },
         "physical_name": "sections",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 32,
-                "attribute": 6
-            },
+                "identifier": 6
+            }
+        ],
+        "attributes": [
             {
                 "id": 34,
                 "attribute": 33
@@ -132,12 +134,13 @@
             "h": 333
         },
         "physical_name": "bookcase_positions",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 44,
-                "attribute": 43
-            },
+                "identifier": 43
+            }
+        ],
+        "attributes": [
             {
                 "id": 46,
                 "attribute": 45
@@ -167,12 +170,13 @@
             "h": 333
         },
         "physical_name": "bookcase",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 51,
-                "attribute": 43
-            },
+                "identifier": 43
+            }
+        ],
+        "attributes": [
             {
                 "id": 53,
                 "attribute": 52
@@ -187,7 +191,7 @@
             },
             {
                 "id": 84,
-                "attribute": 10000103
+                "attribute": 10000104
             }
         ]
     },
@@ -206,12 +210,13 @@
             "h": 333
         },
         "physical_name": "camera_views",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 57,
-                "attribute": 10000101
-            },
+                "identifier": 10000101
+            }
+        ],
+        "attributes": [
             {
                 "id": 58,
                 "attribute": 45
@@ -249,12 +254,13 @@
             "h": 333
         },
         "physical_name": "authors",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 75,
-                "attribute": 6
-            },
+                "identifier": 6
+            }
+        ],
+        "attributes": [
             {
                 "id": 76,
                 "attribute": 73
@@ -276,23 +282,24 @@
             "h": 333
         },
         "physical_name": "book_authors",
-        "identifiers": [],
-        "attributes": [
+        "identifiers": [
             {
                 "id": 13,
-                "attribute": 12
+                "identifier": 12
             },
             {
                 "id": 77,
-                "attribute": 33
-            },
+                "identifier": 10000102
+            }
+        ],
+        "attributes": [
             {
                 "id": 78,
                 "attribute": 74
             },
             {
                 "id": 79,
-                "attribute": 10000102
+                "attribute": 10000103
             }
         ]
     }
