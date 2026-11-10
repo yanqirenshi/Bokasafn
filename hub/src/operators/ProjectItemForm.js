@@ -15,13 +15,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import {Leaf} from '@yanqirenshi/manipulater';
 
 // 吹き出しの枠の色。(src/config/COLORS.js の main。null のときは manipulater の既定の色)
-import { DOCK_COLOR } from '../ihub/manegers/colors.js';
+import DOCK_COLOR from './dockColor.js';
 
 // <markdown-workspace> などのカスタム要素を登録する。
 import '@yanqirenshi/markdown.sitter';
 
-import { fetchProjectsV2 } from '../ihub/redux/slices/scrumSlice.js';
-import sogh from '../ihub/manegers/sogh.js';
+import { fetchProjectsV2, sogh } from '@yanqirenshi/ihub.core';
 
 // 吹き出しの大きさ
 const LEAF_W = 1111;

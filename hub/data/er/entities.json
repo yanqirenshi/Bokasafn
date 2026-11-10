@@ -1,11 +1,9 @@
 [
     {
-        "_id": 1,
-        "code": "books",
+        "id": 1,
         "name": "本",
-        "physical_name": "books",
+        "code": "books",
         "description": "本",
-        "_class": "TABLE",
         "position": {
             "x": -450,
             "y": -250,
@@ -14,15 +12,70 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "books",
+        "identifiers": [
+            {
+                "id": 7,
+                "identifier": 6
+            }
+        ],
+        "attributes": [
+            {
+                "id": 9,
+                "attribute": 8
+            },
+            {
+                "id": 11,
+                "attribute": 10
+            },
+            {
+                "id": 15,
+                "attribute": 14
+            },
+            {
+                "id": 17,
+                "attribute": 16
+            },
+            {
+                "id": 19,
+                "attribute": 18
+            },
+            {
+                "id": 21,
+                "attribute": 20
+            },
+            {
+                "id": 23,
+                "attribute": 22
+            },
+            {
+                "id": 25,
+                "attribute": 24
+            },
+            {
+                "id": 27,
+                "attribute": 26
+            },
+            {
+                "id": 29,
+                "attribute": 28
+            },
+            {
+                "id": 31,
+                "attribute": 30
+            },
+            {
+                "id": 86,
+                "attribute": 85
+            }
+        ]
     },
     {
-        "_id": 2,
-        "code": "sections",
+        "id": 2,
         "name": "章・節",
-        "physical_name": "sections",
+        "code": "sections",
         "description": "本の章・節（parent_id で入れ子）",
-        "_class": "TABLE",
         "position": {
             "x": -76,
             "y": -186,
@@ -31,15 +84,46 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "sections",
+        "identifiers": [
+            {
+                "id": 32,
+                "identifier": 6
+            }
+        ],
+        "attributes": [
+            {
+                "id": 34,
+                "attribute": 33
+            },
+            {
+                "id": 36,
+                "attribute": 35
+            },
+            {
+                "id": 37,
+                "attribute": 22
+            },
+            {
+                "id": 39,
+                "attribute": 38
+            },
+            {
+                "id": 40,
+                "attribute": 10000100
+            },
+            {
+                "id": 42,
+                "attribute": 41
+            }
+        ]
     },
     {
-        "_id": 3,
-        "code": "bookcase_positions",
+        "id": 3,
         "name": "本棚の位置",
-        "physical_name": "bookcase_positions",
+        "code": "bookcase_positions",
         "description": "本棚の画面上の位置（ドラッグで動かした本棚だけ）",
-        "_class": "TABLE",
         "position": {
             "x": -200,
             "y": 272,
@@ -48,15 +132,34 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "bookcase_positions",
+        "identifiers": [
+            {
+                "id": 44,
+                "identifier": 43
+            }
+        ],
+        "attributes": [
+            {
+                "id": 46,
+                "attribute": 45
+            },
+            {
+                "id": 48,
+                "attribute": 47
+            },
+            {
+                "id": 50,
+                "attribute": 49
+            }
+        ]
     },
     {
-        "_id": 4,
-        "code": "bookcase",
+        "id": 4,
         "name": "本棚",
-        "physical_name": "bookcase",
+        "code": "bookcase",
         "description": "本棚。名札の名前と、段数・最小横幅",
-        "_class": "TABLE",
         "position": {
             "x": -433,
             "y": 261,
@@ -65,15 +168,38 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "bookcase",
+        "identifiers": [
+            {
+                "id": 51,
+                "identifier": 43
+            }
+        ],
+        "attributes": [
+            {
+                "id": 53,
+                "attribute": 52
+            },
+            {
+                "id": 55,
+                "attribute": 54
+            },
+            {
+                "id": 56,
+                "attribute": 49
+            },
+            {
+                "id": 84,
+                "attribute": 10000104
+            }
+        ]
     },
     {
-        "_id": 5,
-        "code": "camera_views",
+        "id": 5,
         "name": "カメラ",
-        "physical_name": "camera_views",
+        "code": "camera_views",
         "description": "本棚画面のカメラ（SVG の viewBox）",
-        "_class": "TABLE",
         "position": {
             "x": -439,
             "y": 575,
@@ -82,15 +208,42 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "camera_views",
+        "identifiers": [
+            {
+                "id": 57,
+                "identifier": 10000101
+            }
+        ],
+        "attributes": [
+            {
+                "id": 58,
+                "attribute": 45
+            },
+            {
+                "id": 59,
+                "attribute": 47
+            },
+            {
+                "id": 61,
+                "attribute": 60
+            },
+            {
+                "id": 63,
+                "attribute": 62
+            },
+            {
+                "id": 64,
+                "attribute": 49
+            }
+        ]
     },
     {
-        "_id": 71,
-        "code": "authors",
+        "id": 71,
         "name": "著者",
-        "physical_name": "authors",
+        "code": "authors",
         "description": "著者（複数の本を書いた人も一行）",
-        "_class": "TABLE",
         "position": {
             "x": -941,
             "y": -129,
@@ -99,15 +252,26 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "authors",
+        "identifiers": [
+            {
+                "id": 75,
+                "identifier": 6
+            }
+        ],
+        "attributes": [
+            {
+                "id": 76,
+                "attribute": 73
+            }
+        ]
     },
     {
-        "_id": 72,
-        "code": "book_authors",
+        "id": 72,
         "name": "本の著者",
-        "physical_name": "book_authors",
+        "code": "book_authors",
         "description": "本と著者の対応（役割は 著・編・注・託名）",
-        "_class": "TABLE",
         "position": {
             "x": -727,
             "y": -151,
@@ -116,6 +280,27 @@
         "size": {
             "w": 222,
             "h": 333
-        }
+        },
+        "physical_name": "book_authors",
+        "identifiers": [
+            {
+                "id": 13,
+                "identifier": 12
+            },
+            {
+                "id": 77,
+                "identifier": 10000102
+            }
+        ],
+        "attributes": [
+            {
+                "id": 78,
+                "attribute": 74
+            },
+            {
+                "id": 79,
+                "attribute": 10000103
+            }
+        ]
     }
 ]

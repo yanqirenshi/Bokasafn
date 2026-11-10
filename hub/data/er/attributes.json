@@ -1,0 +1,228 @@
+[
+    {
+        "id": 8,
+        "name": {
+            "logical": "スラッグ",
+            "physical": "slug"
+        },
+        "data_type": "TEXT NOT NULL UNIQUE"
+    },
+    {
+        "id": 10,
+        "name": {
+            "logical": "書名",
+            "physical": "title"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 10000100,
+        "name": {
+            "logical": "見出し",
+            "physical": "title"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 14,
+        "name": {
+            "logical": "時代",
+            "physical": "era"
+        },
+        "data_type": "TEXT"
+    },
+    {
+        "id": 16,
+        "name": {
+            "logical": "分類",
+            "physical": "category"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 18,
+        "name": {
+            "logical": "説明",
+            "physical": "description"
+        },
+        "data_type": "TEXT"
+    },
+    {
+        "id": 20,
+        "name": {
+            "logical": "背表紙の色",
+            "physical": "spine_color"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 22,
+        "name": {
+            "logical": "並び順",
+            "physical": "position"
+        },
+        "data_type": "INTEGER NOT NULL"
+    },
+    {
+        "id": 10000103,
+        "name": {
+            "logical": "並び順",
+            "physical": "position"
+        },
+        "description": "本の中での著者の並び順",
+        "data_type": "INTEGER NOT NULL"
+    },
+    {
+        "id": 24,
+        "name": {
+            "logical": "出典名",
+            "physical": "source_name"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 26,
+        "name": {
+            "logical": "出典URL",
+            "physical": "source_url"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 28,
+        "name": {
+            "logical": "ライセンス",
+            "physical": "license"
+        },
+        "data_type": "TEXT"
+    },
+    {
+        "id": 30,
+        "name": {
+            "logical": "取り込み日時",
+            "physical": "imported_at"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 33,
+        "name": {
+            "logical": "本ID",
+            "physical": "book_id"
+        },
+        "data_type": "INTEGER NOT NULL"
+    },
+    {
+        "id": 35,
+        "name": {
+            "logical": "親の章・節ID",
+            "physical": "parent_id"
+        },
+        "data_type": "INTEGER"
+    },
+    {
+        "id": 38,
+        "name": {
+            "logical": "深さ",
+            "physical": "depth"
+        },
+        "data_type": "INTEGER NOT NULL"
+    },
+    {
+        "id": 41,
+        "name": {
+            "logical": "本文",
+            "physical": "body"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 45,
+        "name": {
+            "logical": "X座標",
+            "physical": "x"
+        },
+        "data_type": "REAL NOT NULL"
+    },
+    {
+        "id": 47,
+        "name": {
+            "logical": "Y座標",
+            "physical": "y"
+        },
+        "data_type": "REAL NOT NULL"
+    },
+    {
+        "id": 49,
+        "name": {
+            "logical": "更新日時",
+            "physical": "updated_at"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 52,
+        "name": {
+            "logical": "段数",
+            "physical": "shelf_rows"
+        },
+        "data_type": "INTEGER NOT NULL"
+    },
+    {
+        "id": 54,
+        "name": {
+            "logical": "最小横幅",
+            "physical": "min_width"
+        },
+        "data_type": "REAL NOT NULL"
+    },
+    {
+        "id": 60,
+        "name": {
+            "logical": "幅",
+            "physical": "w"
+        },
+        "data_type": "REAL NOT NULL"
+    },
+    {
+        "id": 62,
+        "name": {
+            "logical": "高さ",
+            "physical": "h"
+        },
+        "data_type": "REAL NOT NULL"
+    },
+    {
+        "id": 73,
+        "name": {
+            "logical": "名前",
+            "physical": "name"
+        },
+        "data_type": "TEXT NOT NULL UNIQUE"
+    },
+    {
+        "id": 10000104,
+        "name": {
+            "logical": "名前",
+            "physical": "name"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 74,
+        "name": {
+            "logical": "役割",
+            "physical": "role"
+        },
+        "description": "著・編・注・託名",
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 85,
+        "name": {
+            "logical": "本棚キー",
+            "physical": "bookcase_key"
+        },
+        "data_type": "TEXT"
+    }
+]

@@ -9,10 +9,10 @@ import Typography from '@mui/material/Typography';
 import {Leaf} from '@yanqirenshi/manipulater';
 
 // 吹き出しの枠の色。(src/config/COLORS.js の main。null のときは manipulater の既定の色)
-import { DOCK_COLOR } from '../ihub/manegers/colors.js';
+import DOCK_COLOR from './dockColor.js';
 
 import ACCOUNT_MENU_ITEMS, { ACCOUNT_MENU_PAGES, isActive } from '../config/ACCOUNT_MENUS.js';
-import { errorMessage, useCollections, usePatchCollectionMutation } from '../ihub/redux/api/dataApi.js';
+import { errorMessage, useCollections, usePatchCollectionMutation } from '@yanqirenshi/ihub.core';
 
 // 吹き出しの大きさ
 const LEAF_W = 444;

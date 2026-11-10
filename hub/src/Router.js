@@ -1,8 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import * as page from './ihub/components/pages/index.js';
-import * as page_docs from './ihub/components/pages/docs/index.js';
+import { pages as page, docPages as page_docs } from '@yanqirenshi/ihub.core';
 
 export default function Router () {
     return (

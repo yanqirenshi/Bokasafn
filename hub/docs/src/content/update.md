@@ -1,51 +1,51 @@
 # iHub の更新
 
-iHub のリポジトリで直したところを、iHub をコピーしたアプリへ取り込む手順です。
+iHub が新しくなったときに、hub に取り込む手順です。
+iHub 本体 (`@yanqirenshi/ihub.core`・`@yanqirenshi/ihub.srv`) は `node_modules/` に入っているので、パッケージを新しくするだけで済みます。
 
-## 置き換えるもの (iHub 本体)
+## 新しくする
 
-| フォルダ・ファイル | 取り込み方 |
-|---|---|
-| `src/ihub/` | 新しいものに置き換えます。 |
-| `server/` | 新しいものに置き換えます。 |
-| `src/setupProxy.js` | 新しいものに置き換えます。アプリで処理を足していたときは、その処理を移します。`/api` の下は API サーバーへ中継されるので、足す処理のパスは `/api` の外にします。 |
-| `package.json` | 依存するパッケージ (`dependencies`)・`overrides`・`scripts` の差分を見て、合わせます。`overrides` を合わせないと、`npm install` が `ERESOLVE` で失敗することがあります。 |
+`hub/` で、次のコマンドを実行します。
 
-## 置き換えないもの (アプリのもの)
+```
+npm update @yanqirenshi/ihub.core @yanqirenshi/ihub.srv
+```
 
-`data/`・`src/config/`・`src/components/`・`src/wbs/`・`src/operators/`・`src/Router.js`・`src/App.js`・`src/index.css`・`.env.local`
+- `package.json` の範囲 (例: `^0.2.1`) の中で、新しい版に上がります。
+- 0.x の間は、`^0.2.1` は 0.2.x だけを指します。minor (0.3.0 など) に上げるときは、範囲を書き換えます。
 
-## 手順
+```
+npm install @yanqirenshi/ihub.core@^0.3.0 @yanqirenshi/ihub.srv@^0.3.0
+```
 
-1. iHub のリポジトリで、何が変わったかを確かめます。
-iHub の PR や Issue には、「別プロジェクトへの反映手順」を書いていることがあります。
-(例: [サイドメニューの on/off を加えたとき](https://github.com/yanqirenshi/iHub/issues/17))
-2. iHub 本体のフォルダとファイルを、新しいものに置き換えます。
-3. アプリのファイル (`src/config/` など) の書き方が変わったときは、反映手順のとおりに直します。
-iHub の `src/config/` にファイルが増えたときは、そのファイルをアプリの `src/config/` にコピーします。
-(コピーしないと、起動やビルドで `Module not found` のエラーになります)
-4. データのフォーマットが変わったときは、`server/schemas/` と `src/ihub/data_example/` を見て、自分の `data/` を直します。
-直したら、`npm run test:data` で確かめます。
-5. `npm install` を実行してから、`npm start` で動きを確かめます。
+- 2 つのパッケージは、同じ版にそろえてください。
+- 新しい版があるかは、`npm outdated` で確かめられます。
 
-## 古い形式 (`src/data/*.js`) から移すとき
+## 版の付け方
 
-データが `src/data/*.js` だったころ ([#21](https://github.com/yanqirenshi/iHub/pull/21) より前) の iHub をコピーしたアプリは、データを `data/` の JSON に移します。
+iHub は、[semver](https://semver.org/lang/ja/) で版を付けます。
+0.x の間は、次のように読みます。
 
-1. 上の「手順」のとおりに iHub 本体を新しいものにして、`npm install` を実行します。
-2. 次のコマンドで、`src/data/` のデータを `data/` の JSON に変換します。
-   ```
-   node server/tools/convert-legacy-data.mjs src/data data
-   ```
-   `MODULE_TYPELESS_PACKAGE_JSON` という警告が出ますが、問題はありません。
-3. iHub の `src/config/` をコピーします。
-アプリで `src/data/` の `ACCOUNT_MENUS.js`・`ICONS.js`・`OPERATOR_ITEMS.js` を変えていたときは、その変更を `src/config/` のファイルに入れ直します。
-4. `npm run test:data` で、データがフォーマットに合っているかを確かめます。
-5. `src/data/` に、移していないファイルが残っていないことを確かめてから、`src/data/` を消します。
-アプリで足したファイル (iHub の `src/data/` に無いもの) は、使っている部品のそばなどに移します。
+| 上がるところ | 意味 | 取り込むときに |
+|---|---|---|
+| patch (0.2.1 → 0.2.2) | 不具合の修正。設定の形や公開している部品は変わりません | `npm update` だけで済みます |
+| minor (0.2.1 → 0.3.0) | 設定の形・公開している部品・データのフォーマットが変わることがあります | 下の「minor が上がったとき」を見ます |
 
-## アプリで iHub 本体を直したとき
+## minor が上がったとき
 
-アプリの側で iHub 本体 (`src/ihub/` など) を直したときは、iHub のリポジトリにも同じ変更を入れてください。
-そうしないと、次に iHub を取り込んだときに、直したところが消えてしまいます。
-(例: [アプリで直した部品を iHub に取り込んだとき](https://github.com/yanqirenshi/iHub/issues/19))
+1. 変更の内容を、[iHub の CHANGELOG](https://github.com/yanqirenshi/iHub/blob/main/CHANGELOG.md) で確かめます。
+iHub の PR や Issue には、「アプリで直すところ」を書いていることがあります。
+2. 設定の形が変わったときは、`src/index.js` の設定 (`config`) を、CHANGELOG のとおりに直します。
+(設定の項目は、[カスタマイズ](#/customize) の「設定の渡し方」と、`@yanqirenshi/ihub.core` の README にあります)
+3. データのフォーマットが変わったときは、`npx ihub-srv check data` で、直すところを確かめます。
+直したら、もう一度 `npx ihub-srv check data` で確かめます。
+4. `npm start` で、動きを確かめます。
+
+## iHub 本体を直したいとき
+
+`node_modules/` の中は、直さないでください。(`npm install` で、消えます)
+iHub 本体に直したいところが見つかったときは、次の順で進めます。
+
+1. 設定 (`tabs`・`panels`・`help` など) で差し替えられないかを確かめます。([カスタマイズ](#/customize))
+2. 差し替えられないときは、[iHub のリポジトリ](https://github.com/yanqirenshi/iHub/issues) に Issue を立てます。
+それまでは、`src/components/` にパネルを書いて、`panels` で差し替えます。
