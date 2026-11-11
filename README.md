@@ -75,3 +75,9 @@ ctext.org はサイトのスクレイピングを利用規約で禁止してお�
 - `src/components/library/` — SVG の本棚・ズーム処理・インスペクター
 - `src/app/books/[slug]/page.tsx` — 本の扉と目次
 - `src/app/books/[slug]/[sectionId]/page.tsx` — 本文
+
+## hub/ — 設計ドキュメントサイト (iHub)
+
+`hub/` は、設計のデータ (WBS・ER 図・TM・画面遷移図など) を、画面で見て編集するサイトです。[iHub](https://github.com/yanqirenshi/iHub) (`@yanqirenshi/ihub.core`・`@yanqirenshi/ihub.srv`) を使っています。
+iHub の使い方は、[iHub のマニュアル](https://github.com/yanqirenshi/iHub/tree/main/docs) を見てください。
+この hub の起動のしかたや設定は、[`hub/README.md`](./hub/README.md) を見てください。
