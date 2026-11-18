@@ -65,7 +65,10 @@ GITHUB_OAUTH_CLIENT_ID=Ov23xxxxxxxxxxxxxxxx
 GITHUB_OAUTH_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-- トークンには、`repo`・`project`・`read:org` の権限を付けてください。
+- トークンには、`repo`・`project`・`read:org`・`read:user` の 4 つの権限を付けてください。(`read:user` が無いと、画面が接続を確かめられず、「GitHub に接続していません。」のままになります)
+- iHub 0.4.x 以前のころに OAuth で認証した人と、3 つの権限で作ったトークンを使っている人は、次のように直してください。(0.4.x までは、`read:user` を求めていなかったため)
+  - OAuth: Scrum のページの Account タブで、認証し直す。
+  - 個人用アクセストークン: `read:user` の権限を足す。
 - 変数の名前は綴りが少し変わっていますが (`GITHU`・`PARSONAL`)、このままの名前で書きます。
 - `.env.local` は git で共有しません。(`.gitignore` の対象です)
 - OAuth App の Authorization callback URL は、`http://localhost:3100/api/github/oauth/callback` にします。(ポートは、画面を開く URL と同じにします。ポートは、下の「3. 起動する」で決めます)
@@ -136,14 +139,14 @@ iHub のマニュアルの [API サーバー](https://github.com/yanqirenshi/iHu
 
 ## iHub を新しくするとき
 
-`hub/` で、次のコマンドを実行します。(いまは、2 つとも `^0.3.1`)
+`hub/` で、次のコマンドを実行します。(いまは、2 つとも `^0.9.1`)
 
 ```
 npm update @yanqirenshi/ihub.core @yanqirenshi/ihub.srv
 ```
 
 - 2 つのパッケージは、同じ版にそろえてください。(`npm ls @yanqirenshi/ihub.core @yanqirenshi/ihub.srv` で確かめられます)
-- 0.x の間は、`^0.3.1` は 0.3.x だけを指します。minor (0.4.0 など) に上げるときは、範囲を書き換えます。
+- 0.x の間は、`^0.9.1` は 0.9.x だけを指します。minor (0.10.0 など) に上げるときは、範囲を書き換えます。
 - minor が上がったときは、[iHub の CHANGELOG](https://github.com/yanqirenshi/iHub/blob/main/CHANGELOG.md) で変更を確かめ、`src/index.js` などを直します。そのあと、`npx ihub-srv check data` と `npm start` で確かめます。
 - iHub 本体に直したいところが見つかったときは、[iHub のリポジトリ](https://github.com/yanqirenshi/iHub/issues) に Issue を立てます。それまでは、`src/components/` にパネルを書いて、設定の `panels` で差し替えます。
 
