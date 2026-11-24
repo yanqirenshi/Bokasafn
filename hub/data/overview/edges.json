@@ -1,1 +1,360 @@
-[]
+[
+    {
+        "id": 101,
+        "from": {
+            "id": 1,
+            "position": 270
+        },
+        "to": {
+            "id": 21,
+            "position": 90
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 102,
+        "from": {
+            "id": 21,
+            "position": 180
+        },
+        "to": {
+            "id": 22,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 109,
+        "from": {
+            "id": 21,
+            "position": 270
+        },
+        "to": {
+            "id": 26,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 103,
+        "from": {
+            "id": 22,
+            "position": 0
+        },
+        "to": {
+            "id": 23,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 104,
+        "from": {
+            "id": 23,
+            "position": 180
+        },
+        "to": {
+            "id": 24,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 108,
+        "from": {
+            "id": 21,
+            "position": 0
+        },
+        "to": {
+            "id": 3,
+            "position": 180
+        },
+        "from_marker": "arrow"
+    },
+    {
+        "id": 111,
+        "from": {
+            "id": 21,
+            "position": 270
+        },
+        "to": {
+            "id": 23,
+            "position": 90
+        }
+    },
+    {
+        "id": 113,
+        "from": {
+            "id": 23,
+            "position": 270
+        },
+        "to": {
+            "id": 27,
+            "position": 90
+        }
+    },
+    {
+        "id": 115,
+        "from": {
+            "id": 24,
+            "position": 0
+        },
+        "to": {
+            "id": 27,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 116,
+        "from": {
+            "id": 27,
+            "position": 180
+        },
+        "to": {
+            "id": 28,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 121,
+        "from": {
+            "id": 28,
+            "position": 0
+        },
+        "to": {
+            "id": 91,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 123,
+        "from": {
+            "id": 28,
+            "position": 0
+        },
+        "to": {
+            "id": 92,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 124,
+        "from": {
+            "id": 28,
+            "position": 0
+        },
+        "to": {
+            "id": 93,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 126,
+        "from": {
+            "id": 92,
+            "position": 180
+        },
+        "to": {
+            "id": 4,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 127,
+        "from": {
+            "id": 93,
+            "position": 180
+        },
+        "to": {
+            "id": 5,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 128,
+        "from": {
+            "id": 10,
+            "position": 270
+        },
+        "to": {
+            "id": 11,
+            "position": 90
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 129,
+        "from": {
+            "id": 11,
+            "position": 180
+        },
+        "to": {
+            "id": 1,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 130,
+        "from": {
+            "id": 71,
+            "position": 180
+        },
+        "to": {
+            "id": 72,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 131,
+        "from": {
+            "id": 28,
+            "position": 0
+        },
+        "to": {
+            "id": 72,
+            "position": 170
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 132,
+        "from": {
+            "id": 72,
+            "position": 190
+        },
+        "to": {
+            "id": 12,
+            "position": 340
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        },
+        "from_marker": "arrow"
+    },
+    {
+        "id": 133,
+        "from": {
+            "id": 12,
+            "position": 0
+        },
+        "to": {
+            "id": 9,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 134,
+        "from": {
+            "id": 26,
+            "position": 180
+        },
+        "to": {
+            "id": 13,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 135,
+        "from": {
+            "id": 14,
+            "position": 180
+        },
+        "to": {
+            "id": 91,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 136,
+        "from": {
+            "id": 14,
+            "position": 180
+        },
+        "to": {
+            "id": 92,
+            "position": 0
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    },
+    {
+        "id": 137,
+        "from": {
+            "id": 16,
+            "position": 90
+        },
+        "to": {
+            "id": 6,
+            "position": 270
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        },
+        "from_marker": "arrow"
+    },
+    {
+        "id": 138,
+        "from": {
+            "id": 18,
+            "position": 0
+        },
+        "to": {
+            "id": 6,
+            "position": 180
+        },
+        "stroke": {
+            "color": "#b0b0b0"
+        }
+    }
+]

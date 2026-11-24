@@ -1,1 +1,607 @@
-[]
+[
+    {
+        "id": 1,
+        "type": "NODE",
+        "label": {
+            "text": "スキャン PDF",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 160,
+            "h": 80
+        },
+        "position": {
+            "x": -39,
+            "y": 1373
+        },
+        "shadow": false
+    },
+    {
+        "id": 2,
+        "type": "NODE",
+        "label": {
+            "text": "Tyggja",
+            "font": {
+                "size": 18,
+                "weight": "bold",
+                "color": "#3b4a63"
+            }
+        },
+        "padding": 40,
+        "size": {
+            "w": 200,
+            "h": 150
+        },
+        "position": {
+            "x": 207,
+            "y": 1320
+        },
+        "children": [
+            {
+                "id": 21,
+                "type": "NODE",
+                "label": {
+                    "text": "ocr",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 160,
+                    "h": 80
+                },
+                "position": {
+                    "x": 24,
+                    "y": 11
+                }
+            },
+            {
+                "id": 23,
+                "type": "NODE",
+                "label": {
+                    "text": "build",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 160,
+                    "h": 80
+                },
+                "position": {
+                    "x": 277,
+                    "y": 12
+                }
+            },
+            {
+                "id": 27,
+                "type": "NODE",
+                "label": {
+                    "text": "structure",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 160,
+                    "h": 80
+                },
+                "position": {
+                    "x": 517,
+                    "y": 9
+                }
+            }
+        ],
+        "link": {
+            "url": "https://github.com/yanqirenshi/Tyggja"
+        }
+    },
+    {
+        "id": 3,
+        "type": "NODE",
+        "label": {
+            "text": "YomiToku",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 160,
+            "h": 80
+        },
+        "position": {
+            "x": 269,
+            "y": 1584
+        },
+        "link": {
+            "url": "https://github.com/kotaro-kinoshita/yomitoku"
+        }
+    },
+    {
+        "id": 9,
+        "type": "NODE",
+        "label": {
+            "text": "Frasoga (別リポジトリ)",
+            "font": {
+                "size": 18,
+                "weight": "bold",
+                "color": "#3b4a63"
+            }
+        },
+        "padding": 40,
+        "size": {
+            "w": 200,
+            "h": 150
+        },
+        "position": {
+            "x": 1042,
+            "y": 1325
+        },
+        "children": [
+            {
+                "id": 91,
+                "type": "NODE",
+                "label": {
+                    "text": "web app で表示",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 200,
+                    "h": 80
+                },
+                "position": {
+                    "x": 6,
+                    "y": 4
+                }
+            },
+            {
+                "id": 92,
+                "type": "NODE",
+                "label": {
+                    "text": "HTML 出力",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 200,
+                    "h": 80
+                },
+                "position": {
+                    "x": 286,
+                    "y": 8
+                }
+            },
+            {
+                "id": 93,
+                "type": "NODE",
+                "label": {
+                    "text": "Markdown 出力",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 200,
+                    "h": 80
+                },
+                "position": {
+                    "x": 534,
+                    "y": 10
+                }
+            }
+        ],
+        "link": {
+            "url": "https://github.com/yanqirenshi/Frasoga"
+        }
+    },
+    {
+        "id": 10,
+        "type": "NODE",
+        "label": {
+            "text": "Kindle",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 160,
+            "h": 80
+        },
+        "position": {
+            "x": -312,
+            "y": 1590
+        },
+        "shadow": false
+    },
+    {
+        "id": 11,
+        "type": "NODE",
+        "label": {
+            "text": "kindle.sitter",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 160,
+            "h": 80
+        },
+        "position": {
+            "x": -43,
+            "y": 1587
+        },
+        "description": "Kindle の画面から、スキャン PDF を作るツール",
+        "link": {
+            "url": "https://github.com/Foolsgolds/kindle.sitter"
+        }
+    },
+    {
+        "id": 7,
+        "type": "NODE",
+        "label": {
+            "text": "Melta (別リポジトリ)",
+            "font": {
+                "size": 18,
+                "weight": "bold",
+                "color": "#3b4a63"
+            }
+        },
+        "padding": 40,
+        "size": {
+            "w": 200,
+            "h": 150
+        },
+        "position": {
+            "x": 1921,
+            "y": 1320
+        },
+        "link": {
+            "url": "https://github.com/yanqirenshi/Melta"
+        },
+        "children": [
+            {
+                "id": 71,
+                "type": "NODE",
+                "label": {
+                    "text": "編集者 (カスタムエージェント)",
+                    "align": "center",
+                    "valign": "middle",
+                    "font": {
+                        "size": 12,
+                        "color": "#333333"
+                    }
+                },
+                "size": {
+                    "w": 200,
+                    "h": 80
+                },
+                "position": {
+                    "x": 0,
+                    "y": 180
+                }
+            },
+            {
+                "id": 72,
+                "type": "NODE",
+                "label": {
+                    "text": "melta コマンド",
+                    "align": "center",
+                    "valign": "middle"
+                },
+                "size": {
+                    "w": 200,
+                    "h": 80
+                },
+                "position": {
+                    "x": 2,
+                    "y": 6
+                }
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "type": "NODE",
+        "label": {
+            "text": "A",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 40,
+            "h": 40
+        },
+        "position": {
+            "x": 556,
+            "y": 536
+        },
+        "border": {
+            "r": 20
+        },
+        "shadow": false
+    },
+    {
+        "id": 14,
+        "type": "NODE",
+        "label": {
+            "text": "A",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 40,
+            "h": 40
+        },
+        "position": {
+            "x": 1317,
+            "y": 1608
+        },
+        "border": {
+            "r": 20
+        },
+        "shadow": false
+    },
+    {
+        "id": 15,
+        "type": "NODE",
+        "label": {
+            "text": "Local PC",
+            "font": {
+                "size": 18,
+                "weight": "bold",
+                "color": "#3b4a63"
+            }
+        },
+        "padding": 40,
+        "size": {
+            "w": 200,
+            "h": 150
+        },
+        "position": {
+            "x": 153,
+            "y": 635
+        },
+        "children": [
+            {
+                "id": 19,
+                "type": "NODE",
+                "label": {
+                    "text": "~/GoogleDrive/BOOKS/",
+                    "font": {
+                        "size": 18,
+                        "weight": "bold",
+                        "color": "#3b4a63"
+                    }
+                },
+                "padding": 40,
+                "size": {
+                    "w": 200,
+                    "h": 150
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "children": [
+                    {
+                        "id": 6,
+                        "type": "NODE",
+                        "label": {
+                            "text": "out ({book-code}/)",
+                            "font": {
+                                "size": 18,
+                                "weight": "bold",
+                                "color": "#3b4a63"
+                            }
+                        },
+                        "padding": 40,
+                        "size": {
+                            "w": 200,
+                            "h": 150
+                        },
+                        "position": {
+                            "x": 0,
+                            "y": 0
+                        },
+                        "children": [
+                            {
+                                "id": 22,
+                                "type": "NODE",
+                                "label": {
+                                    "text": "raw/",
+                                    "align": "center",
+                                    "valign": "middle"
+                                },
+                                "size": {
+                                    "w": 160,
+                                    "h": 80
+                                },
+                                "position": {
+                                    "x": 21,
+                                    "y": 52
+                                },
+                                "shadow": false
+                            },
+                            {
+                                "id": 26,
+                                "type": "NODE",
+                                "label": {
+                                    "text": "figures/",
+                                    "align": "center",
+                                    "valign": "middle"
+                                },
+                                "size": {
+                                    "w": 160,
+                                    "h": 80
+                                },
+                                "position": {
+                                    "x": 223,
+                                    "y": 53
+                                },
+                                "shadow": false
+                            },
+                            {
+                                "id": 24,
+                                "type": "NODE",
+                                "label": {
+                                    "text": "book.json",
+                                    "align": "center",
+                                    "valign": "middle"
+                                },
+                                "size": {
+                                    "w": 160,
+                                    "h": 80
+                                },
+                                "position": {
+                                    "x": 421,
+                                    "y": 51
+                                },
+                                "shadow": false
+                            },
+                            {
+                                "id": 4,
+                                "type": "NODE",
+                                "label": {
+                                    "text": "publish/<版>/index.html",
+                                    "align": "center",
+                                    "valign": "middle",
+                                    "font": {
+                                        "size": 12,
+                                        "color": "#333333"
+                                    }
+                                },
+                                "size": {
+                                    "w": 160,
+                                    "h": 80
+                                },
+                                "position": {
+                                    "x": 1289,
+                                    "y": 59
+                                },
+                                "shadow": false
+                            },
+                            {
+                                "id": 5,
+                                "type": "NODE",
+                                "label": {
+                                    "text": "publish/<版>/book.md",
+                                    "align": "center",
+                                    "valign": "middle",
+                                    "font": {
+                                        "size": 12,
+                                        "color": "#333333"
+                                    }
+                                },
+                                "size": {
+                                    "w": 160,
+                                    "h": 80
+                                },
+                                "position": {
+                                    "x": 1475,
+                                    "y": 58
+                                },
+                                "shadow": false
+                            },
+                            {
+                                "id": 17,
+                                "type": "NODE",
+                                "label": {
+                                    "text": "structure/",
+                                    "font": {
+                                        "size": 18,
+                                        "weight": "bold",
+                                        "color": "#3b4a63"
+                                    }
+                                },
+                                "padding": 40,
+                                "size": {
+                                    "w": 100,
+                                    "h": 100
+                                },
+                                "position": {
+                                    "x": 705,
+                                    "y": 1
+                                },
+                                "children": [
+                                    {
+                                        "id": 28,
+                                        "type": "NODE",
+                                        "label": {
+                                            "text": "original/",
+                                            "align": "center",
+                                            "valign": "middle"
+                                        },
+                                        "size": {
+                                            "w": 160,
+                                            "h": 80
+                                        },
+                                        "position": {
+                                            "x": 8,
+                                            "y": 18
+                                        },
+                                        "shadow": false
+                                    },
+                                    {
+                                        "id": 12,
+                                        "type": "NODE",
+                                        "label": {
+                                            "text": "<版>/",
+                                            "align": "center",
+                                            "valign": "middle"
+                                        },
+                                        "size": {
+                                            "w": 160,
+                                            "h": 80
+                                        },
+                                        "position": {
+                                            "x": 237,
+                                            "y": 16
+                                        },
+                                        "shadow": false
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "type": "NODE",
+        "label": {
+            "text": "Google Drive",
+            "align": "center",
+            "valign": "middle"
+        },
+        "size": {
+            "w": 160,
+            "h": 80
+        },
+        "position": {
+            "x": 2110,
+            "y": 803
+        }
+    },
+    {
+        "id": 18,
+        "type": "NODE",
+        "_class": "BRANCH",
+        "label": {
+            "text": "Bokasafn (別リポジトリ)",
+            "font": {
+                "size": 18,
+                "weight": "bold",
+                "color": "#3b4a63"
+            }
+        },
+        "padding": 40,
+        "size": {
+            "w": 200,
+            "h": 150
+        },
+        "position": {
+            "x": 990,
+            "y": 366
+        },
+        "link": {
+            "url": "https://github.com/yanqirenshi/Bokasafn"
+        }
+    }
+]
