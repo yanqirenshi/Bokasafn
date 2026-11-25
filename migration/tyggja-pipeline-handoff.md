@@ -26,7 +26,13 @@ Kindle → kindle.sitter → スキャン PDF
   → Frasoga（web app・export）        → publish/<版>/
 ```
 
-図は、Tyggja の hub の overview にあります（`C:\Users\yanqi\prj\Tyggja\hub\data\overview\`。画面は Tyggja の hub を起動して `/?tab=overview`）。
+図は、Bokasafn の hub の overview にあります（`C:\Users\yanqi\prj\Bokasafn\hub\data\overview\`。画面は Bokasafn の hub を起動して `/?tab=overview`）。
+2026-11-25 に、Tyggja の hub から、内容を変えずに移しました。
+Tyggja の hub の overview は、空にしています（移す前の内容は、Tyggja の git の履歴の 3b36747 にあります）。
+hub は `npm --prefix hub run start` で起動します。
+ポートは、既定では画面が 3000、API が 4000 です。
+`.claude/launch.json` の `hub` の設定で起動すると、画面が 3100、API が 4100 になります。
+Tyggja の hub も既定で同じポートを使うので、どちらの hub の画面を見ているかを確かめてください。
 この図には、Bokasafn の枠と、Bokasafn から本のフォルダへの矢印も描かれています。
 ただし、Bokasafn がこのデータをどう使うかは、Tyggja のセッションでは決めていません（9 章）。
 
@@ -339,4 +345,4 @@ Bokasafn の作業で、決める必要があるかもしれないことです�
 | Melta の要件と、決めたこと | https://github.com/yanqirenshi/Melta/issues/1 |
 | Frasoga の使い方 | `C:\Users\yanqi\prj\Frasoga\README.md` |
 | JSON を読んで表示する実装の例 | `C:\Users\yanqi\prj\Frasoga\src\documents\StructureBook.tsx` |
-| 全体の図 | `C:\Users\yanqi\prj\Tyggja\hub\data\overview\` |
+| 全体の図 | `C:\Users\yanqi\prj\Bokasafn\hub\data\overview\` |
