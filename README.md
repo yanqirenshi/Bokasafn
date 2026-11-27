@@ -22,6 +22,27 @@ npm run dev      # http://localhost:3000
 npm run import -- shanghan-lun
 ```
 
+## 本のフォルダへの書き出し
+
+本の内容は、SQLite から本のフォルダ（JSON）へ移す途中です。
+いまは、SQLite に入っている本を、本のフォルダの形式で書き出せます。
+画面は、まだ SQLite の本文を読んでいます。
+
+```bash
+npm run export                    # すべての本を data/books/{slug}/ に書き出す
+npm run export -- xiaojing lunyu  # slug を指定
+npm run export -- --out <置き場>   # 書き出し先を指定（環境変数 BOKASAFN_BOOKS_DIR でも指定できる）
+npm run export -- --force         # 既にある structure/original/ を作り直す
+```
+
+- 形式は、Tyggja の `structure/original/`（`index.json` とセクション単位のファイル）と同じです。形式の正本は、Tyggja のリポジトリの `schema/` と README です。
+- 取り込んだ 1 つのセクション（篇）を、形式上の 1 ページとして扱います。元データは、本のフォルダの `source.json` に残します。
+- 改行と空行は、どちらも段落の区切りとして扱います。行の前後の空白は落とします。
+- センテンスは、全角の「。」「！」「？」と、その直後の閉じ括弧で区切ります。
+- 作り直すと ID が振り直されるので、既にある `structure/original/` は `--force` が無ければ上書きしません。
+
+経緯は [migration/tyggja-pipeline-handoff.md](migration/tyggja-pipeline-handoff.md) にあります。
+
 ## 収録書と取り込み元
 
 ctext.org の「醫家」(https://ctext.org/chinese-medicine/zhs)・「道家」(https://ctext.org/daoism/zhs)・「儒家」(https://ctext.org/confucianism/zhs)・「法家」(https://ctext.org/legalism/zhs) にある書目を、中文版ウィキソース（維基文庫）から取り込んでいます。
