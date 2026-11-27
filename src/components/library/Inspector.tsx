@@ -8,8 +8,8 @@ const MAX_CHAPTERS = 12;
 
 /** 本棚で選んだ本の情報を右端に出すパネル */
 export function Inspector({ book, onClose }: { book: ShelfBook; onClose: () => void }) {
-  const readHref = book.firstSectionId
-    ? `/books/${book.slug}/${book.firstSectionId}`
+  const readHref = book.firstPageId
+    ? `/books/${book.slug}/${encodeURIComponent(book.firstPageId)}`
     : `/books/${book.slug}`;
   const rest = book.chapters.length - MAX_CHAPTERS;
 
@@ -51,9 +51,13 @@ export function Inspector({ book, onClose }: { book: ShelfBook; onClose: () => v
 
       {book.description && <p className={styles.description}>{book.description}</p>}
 
-      <Link href={readHref} className={styles.read}>
-        読む
-      </Link>
+      {book.readingEdition ? (
+        <Link href={readHref} className={styles.read}>
+          読む
+        </Link>
+      ) : (
+        <p className={styles.description}>本のフォルダが見つかりません（{book.folder}）。</p>
+      )}
 
       {book.chapters.length > 0 && (
         <section className={styles.chapters}>

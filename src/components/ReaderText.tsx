@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import styles from "./ReaderText.module.css";
 
 type Writing = "horizontal" | "vertical";
@@ -33,8 +33,8 @@ function saveWriting(w: Writing) {
   listeners.forEach((l) => l());
 }
 
-/** 本文。横書き・縦書きを切り替えられる */
-export function ReaderText({ body }: { body: string }) {
+/** 本文の入れ物。横書き・縦書きを切り替えられる */
+export function ReaderText({ children }: { children: ReactNode }) {
   const writing = useSyncExternalStore(subscribe, readWriting, () => "horizontal");
 
   return (
@@ -56,9 +56,7 @@ export function ReaderText({ body }: { body: string }) {
         </button>
       </div>
       <div className={writing === "vertical" ? styles.vertical : styles.horizontal}>
-        {body.split("\n\n").map((para, i) => (
-          <p key={i}>{para}</p>
-        ))}
+        {children}
       </div>
     </>
   );

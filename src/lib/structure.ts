@@ -129,6 +129,33 @@ export function readPart(folder: string, edition: string, file: string): Structu
   return readJson<StructurePart>(inside(editionDir(folder, edition), file));
 }
 
+const FIGURE_TYPES: Record<string, string> = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".webp": "image/webp",
+};
+
+/**
+ * 本のフォルダの figures/ にある画像を読む。segments は figures/ からのパス。
+ * figures/ の外を指すパス、画像でないファイル、無いファイルは undefined。
+ */
+export function readFigure(
+  folder: string,
+  segments: string[],
+): { data: Buffer; contentType: string } | undefined {
+  let file: string;
+  try {
+    file = inside(path.join(bookDir(folder), "figures"), ...segments);
+  } catch {
+    return undefined;
+  }
+  const contentType = FIGURE_TYPES[path.extname(file).toLowerCase()];
+  if (!contentType || !fs.existsSync(file) || !fs.statSync(file).isFile()) return undefined;
+  return { data: fs.readFileSync(file), contentType };
+}
+
 /** 目次を、読み順に平らに並べる */
 export function flattenToc(toc: TocNode[]): TocNode[] {
   return toc.flatMap((node) => [node, ...flattenToc(node.children)]);

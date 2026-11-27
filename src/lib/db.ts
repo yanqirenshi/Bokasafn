@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseAuthors, type AuthorCredit } from "./authors";
 import { DEFAULT_BOOKCASE_SETTINGS } from "./bookcase-settings";
+import { resolveEdition } from "./structure";
 
 export const DB_PATH =
   process.env.BOKASAFN_DB ?? path.join(process.cwd(), "data", "bokasafn.db");
@@ -21,6 +22,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 -- 冊子。本のフォルダの、ある版を、1 冊として棚に置いたもの。
 -- 本の内容は持たず、どこにあるか（folder と edition）だけを持つ。
+-- 本の内容は、本のフォルダ（<本の置き場>/<folder>/structure/<版>/）の JSON にある。
 CREATE TABLE IF NOT EXISTS booklet (
   id           INTEGER PRIMARY KEY,
   slug         TEXT    NOT NULL UNIQUE,
@@ -46,19 +48,6 @@ CREATE TABLE IF NOT EXISTS booklet (
   updated_at   TEXT    NOT NULL DEFAULT '',
   updated_by   INTEGER REFERENCES user(id)
 );
-
--- 巻・篇などの階層。本文 (body) は段落を空行で区切ったプレーンテキスト。
-CREATE TABLE IF NOT EXISTS sections (
-  id         INTEGER PRIMARY KEY,
-  book_id    INTEGER NOT NULL REFERENCES booklet(id) ON DELETE CASCADE,
-  parent_id  INTEGER REFERENCES sections(id) ON DELETE CASCADE,
-  position   INTEGER NOT NULL,
-  depth      INTEGER NOT NULL,
-  title      TEXT    NOT NULL,
-  body       TEXT    NOT NULL DEFAULT ''
-);
-
-CREATE INDEX IF NOT EXISTS sections_book ON sections(book_id, position);
 
 -- 著者。複数の本を書いた人も一行にまとめる。
 CREATE TABLE IF NOT EXISTS authors (
@@ -114,7 +103,7 @@ function renameOldTables(db: Database.Database) {
     db.exec("ALTER TABLE bookcase_settings RENAME TO bookcase");
   }
   // books は booklet に、books.title は booklet.name に変えた。
-  // sections と book_authors の外部キーは、SQLite が新しい名前に付け替える。
+  // book_authors（と、以前の sections）の外部キーは、SQLite が新しい名前に付け替える。
   if (exists("books") && !exists("booklet")) {
     db.transaction(() => {
       db.exec("ALTER TABLE books RENAME TO booklet");
@@ -264,6 +253,39 @@ function moveAuthorsOutOfBooks(db: Database.Database) {
   })();
 }
 
+// 以前の DB は、本文を sections に持っていた。本の内容は本のフォルダに移したので、消す。
+// 消すと元に戻せないので、すべての冊子の本のフォルダが読めるときだけ消す。
+// 読めない冊子があれば残し、書き出し方を伝える。
+function dropSectionsWhenExported(db: Database.Database) {
+  const exists =
+    db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'sections'").get() !==
+    undefined;
+  if (!exists) return;
+  const booklets = db.prepare("SELECT slug, folder, edition FROM booklet").all() as {
+    slug: string;
+    folder: string;
+    edition: string | null;
+  }[];
+  const missing = booklets.filter((b) => {
+    try {
+      return resolveEdition(b.folder, b.edition) === undefined;
+    } catch {
+      return true;
+    }
+  });
+  if (missing.length > 0) {
+    console.warn(
+      `本のフォルダが見つからない本が ${missing.length} 冊あります（${missing
+        .slice(0, 5)
+        .map((b) => b.slug)
+        .join("、")}${missing.length > 5 ? " ほか" : ""}）。` +
+        "以前の本文（sections）を残しました。npm run export で本のフォルダに書き出してください。",
+    );
+    return;
+  }
+  db.exec("DROP TABLE sections");
+}
+
 let db: Database.Database | undefined;
 
 export function getDb(): Database.Database {
@@ -280,6 +302,7 @@ export function getDb(): Database.Database {
     addBookcasePositionsForeignKey(db);
     moveAuthorsOutOfBooks(db);
     placeBooksOnBookcases(db);
+    dropSectionsWhenExported(db);
   }
   return db;
 }

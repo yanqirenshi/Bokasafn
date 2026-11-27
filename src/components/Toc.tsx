@@ -1,33 +1,37 @@
 import Link from "next/link";
-import type { Section } from "@/lib/books";
+import { hrefOf, type TocEntry } from "@/lib/books";
 import styles from "./Toc.module.css";
 
 export function Toc({
   slug,
-  sections,
-  currentId,
+  entries,
+  currentPageId,
 }: {
   slug: string;
-  sections: Section[];
-  currentId?: number;
+  entries: TocEntry[];
+  /** いま開いているページ。そのページの先頭のセクションに印を付ける */
+  currentPageId?: string;
 }) {
   return (
     <ol className={styles.toc}>
-      {sections.map((s) => (
-        <li
-          key={s.id}
-          className={s.depth === 0 ? styles.top : undefined}
-          style={{ paddingInlineStart: `${s.depth * 1.2}em` }}
-        >
-          <Link
-            href={`/books/${slug}/${s.id}`}
-            className={s.id === currentId ? styles.current : undefined}
-            aria-current={s.id === currentId ? "page" : undefined}
+      {entries.map((e) => {
+        const current = e.isPage && e.pageId === currentPageId;
+        return (
+          <li
+            key={e.id}
+            className={e.depth === 0 ? styles.top : undefined}
+            style={{ paddingInlineStart: `${e.depth * 1.2}em` }}
           >
-            {s.title}
-          </Link>
-        </li>
-      ))}
+            <Link
+              href={hrefOf(slug, e)}
+              className={current ? styles.current : undefined}
+              aria-current={current ? "page" : undefined}
+            >
+              {e.title}
+            </Link>
+          </li>
+        );
+      })}
     </ol>
   );
 }

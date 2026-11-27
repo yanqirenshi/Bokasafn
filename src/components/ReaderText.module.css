@@ -24,7 +24,6 @@
 
 .horizontal p,
 .vertical p {
-  white-space: pre-line;
   font-size: 1.12rem;
   line-height: 2;
   margin-bottom: 1em;

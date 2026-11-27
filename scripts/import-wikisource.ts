@@ -1,8 +1,13 @@
 /**
- * 中文版ウィキソース (zh.wikisource.org) から本を取り込み、SQLite に保存する。
+ * 中文版ウィキソース (zh.wikisource.org) から本を取り込む。
+ * 本の内容は本のフォルダ（structure/original/）に書き、冊子（booklet）を SQLite に登録する。
  *
  *   npm run import            # 全冊
  *   npm run import -- nanjing # slug を指定して一冊だけ
+ *   npm run import -- --force # 原本を元にした版があっても、原本を作り直す
+ *
+ * 本の置き場は、環境変数 BOKASAFN_BOOKS_DIR で指定する（既定は data/books）。
+ * 取り込み直すと、原本の ID が振り直される。
  *
  * 取得した HTML は data/cache/ に保存し、再実行時はそれを使う（API への負荷を避けるため）。
  */
@@ -12,6 +17,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseAuthors } from "../src/lib/authors";
 import { addBookAuthors, bookcaseKeyOf, DEFAULT_USER_ID, ensureBookcase, getDb } from "../src/lib/db";
+import { bookDir, listEditions, ORIGINAL_EDITION } from "../src/lib/structure";
+import { describeResult, writeOriginal } from "./lib/write-structure";
 
 type BookConfig = {
   slug: string;
@@ -699,58 +706,85 @@ function prune(node: SectionNode): SectionNode | undefined {
   return { ...node, children };
 }
 
-function save(book: BookConfig & { category: string }, position: number, tree: SectionNode) {
+function save(
+  book: BookConfig & { category: string },
+  position: number,
+  tree: SectionNode,
+  force: boolean,
+) {
   const db = getDb();
-  const insertBook = db.prepare(`
-    INSERT INTO booklet (slug, name, era, category, description, spine_color, position,
-                         source_name, source_url, license, imported_at, bookcase_key,
-                         folder, created_at, created_by, updated_at, updated_by)
-    VALUES (@slug, @title, @era, @category, @description, @spineColor, @position,
-            '維基文庫', @sourceUrl, 'Public domain', datetime('now'), @bookcaseKey,
-            @slug, datetime('now'), @userId, datetime('now'), @userId)`);
-  const insertSection = db.prepare(`
-    INSERT INTO sections (book_id, parent_id, position, depth, title, body)
-    VALUES (?, ?, ?, ?, ?, ?)`);
 
-  let count = 0;
+  // 前置き (序など見出しのない冒頭部分) は「卷首」として先頭に置く。見出しが一つもなければ「全文」
+  // 書名が書いてあるだけの前置きは章にしない
+  const leadTitle = tree.children.length > 0 ? "卷首" : "全文";
+  const lead = tree.body.trim();
+  const sections: SectionNode[] = [
+    ...(lead && lead !== book.title ? [{ title: leadTitle, body: tree.body, children: [] }] : []),
+    ...tree.children,
+  ];
+
+  const existing = db
+    .prepare("SELECT id, folder FROM booklet WHERE slug = ?")
+    .get(book.slug) as { id: number; folder: string } | undefined;
+  const folder = existing?.folder ?? book.slug;
+
+  // 原本を作り直すと ID が振り直され、Melta が作った版との対応が取れなくなる
+  const editions = listEditions(folder).filter((e) => e !== ORIGINAL_EDITION);
+  if (editions.length > 0 && !force) {
+    throw new Error(
+      `原本を元にした版（${editions.join("、")}）があります。作り直すなら --force を付けてください`,
+    );
+  }
+
+  // 本の内容は、本のフォルダに書く
+  const result = writeOriginal(bookDir(folder), {
+    title: book.title,
+    source: { ...book, sourceUrl: pageUrl(book.page), sections },
+    sections,
+  });
+
+  // 冊子は、取り込み直しても同じ ID のまま更新する（置いてある本棚も変えない）
+  const sourceUrl = pageUrl(book.page);
   db.transaction(() => {
-    // 取り込み直すときは、いま置いてある本棚に戻す。初めてなら分類ごとの本棚（無ければ作る）に置く
-    const placed = db.prepare("SELECT bookcase_key FROM booklet WHERE slug = ?").get(book.slug) as
-      | { bookcase_key: string | null }
-      | undefined;
-    const bookcaseKey = placed?.bookcase_key ?? bookcaseKeyOf(book.category);
-    ensureBookcase(db, bookcaseKey, book.category);
-    db.prepare("DELETE FROM booklet WHERE slug = ?").run(book.slug);
-    const bookId = insertBook.run({
-      ...book,
-      position,
-      sourceUrl: pageUrl(book.page),
-      bookcaseKey,
-      userId: DEFAULT_USER_ID,
-    }).lastInsertRowid;
-    addBookAuthors(db, bookId, parseAuthors(book.author));
-
-    const walk = (node: SectionNode, parentId: number | bigint | null, depth: number) => {
-      const id = insertSection.run(bookId, parentId, count++, depth, node.title, node.body)
+    let bookletId: number | bigint;
+    if (existing) {
+      bookletId = existing.id;
+      db.prepare(
+        `UPDATE booklet
+         SET name = @title, era = @era, category = @category, description = @description,
+             spine_color = @spineColor, position = @position, source_url = @sourceUrl,
+             imported_at = datetime('now'), updated_at = datetime('now'), updated_by = @userId
+         WHERE id = @id`,
+      ).run({ ...book, position, sourceUrl, userId: DEFAULT_USER_ID, id: existing.id });
+      db.prepare("DELETE FROM book_authors WHERE book_id = ?").run(existing.id);
+    } else {
+      const bookcaseKey = bookcaseKeyOf(book.category);
+      ensureBookcase(db, bookcaseKey, book.category);
+      bookletId = db
+        .prepare(
+          `INSERT INTO booklet (slug, name, era, category, description, spine_color, position,
+                                source_name, source_url, license, imported_at, bookcase_key,
+                                folder, created_at, created_by, updated_at, updated_by)
+           VALUES (@slug, @title, @era, @category, @description, @spineColor, @position,
+                   '維基文庫', @sourceUrl, 'Public domain', datetime('now'), @bookcaseKey,
+                   @folder, datetime('now'), @userId, datetime('now'), @userId)`,
+        )
+        .run({ ...book, position, sourceUrl, bookcaseKey, folder, userId: DEFAULT_USER_ID })
         .lastInsertRowid;
-      for (const child of node.children) walk(child, id, depth + 1);
-    };
-    // 前置き (序など見出しのない冒頭部分) は「卷首」として先頭に置く。見出しが一つもなければ「全文」
-    // 書名が書いてあるだけの前置きは章にしない
-    const leadTitle = tree.children.length > 0 ? "卷首" : "全文";
-    const lead = tree.body.trim();
-    if (lead && lead !== book.title) walk({ title: leadTitle, body: tree.body, children: [] }, null, 0);
-    for (const child of tree.children) walk(child, null, 0);
+    }
+    addBookAuthors(db, bookletId, parseAuthors(book.author));
     // 取り込み直しで、どの本にも結び付かなくなった著者を消す
     db.prepare(
       "DELETE FROM authors WHERE id NOT IN (SELECT author_id FROM book_authors)",
     ).run();
   })();
-  return count;
+  return result;
 }
 
 async function main() {
-  const only = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const force = args.includes("--force");
+  const only = args.filter((a) => a !== "--force");
   const failed: string[] = [];
   for (const [i, book] of BOOKS.entries()) {
     if (only.length && !only.includes(book.slug)) continue;
@@ -758,8 +792,8 @@ async function main() {
     try {
       let tree = dropNonText(await buildTree(book));
       if (book.dropParagraphs) tree = dropParagraphs(tree, book.dropParagraphs);
-      const count = save(book, i, prune(tree) ?? { title: "", body: "", children: [] });
-      console.log(`  → ${count} セクションを保存`);
+      const result = save(book, i, prune(tree) ?? { title: "", body: "", children: [] }, force);
+      console.log(`  → ${describeResult(result)}`);
     } catch (err) {
       // 一冊が失敗しても、残りの本の取り込みは続ける
       console.error(`  × ${err instanceof Error ? err.message : err}`);

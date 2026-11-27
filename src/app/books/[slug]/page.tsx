@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { OpenBook } from "@/components/OpenBook";
 import { Toc } from "@/components/Toc";
 import { formatAuthors } from "@/lib/authors";
-import { getBook, listSections } from "@/lib/books";
+import { getBook, getContents } from "@/lib/books";
 import styles from "../book.module.css";
 
 export async function generateMetadata({ params }: PageProps<"/books/[slug]">): Promise<Metadata> {
@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: PageProps<"/books/[slug]">): 
 export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
   const book = await getBook((await params).slug);
   if (!book) notFound();
-  const sections = await listSections(book.id);
-  const first = sections.find((s) => s.hasBody);
+  const contents = await getContents(book);
+  const first = contents?.pageIds[0];
 
   return (
     <OpenBook
@@ -39,12 +39,19 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
             )}
             <dt>分類</dt>
             <dd>{book.category}</dd>
-            <dt>字数</dt>
-            <dd>約 {book.charCount.toLocaleString()} 字</dd>
+            {contents && (
+              <>
+                <dt>字数</dt>
+                <dd>約 {book.charCount.toLocaleString()} 字</dd>
+              </>
+            )}
           </dl>
           {book.description && <p className={styles.description}>{book.description}</p>}
           {first && (
-            <Link href={`/books/${book.slug}/${first.id}`} className={styles.startButton}>
+            <Link
+              href={`/books/${book.slug}/${encodeURIComponent(first)}`}
+              className={styles.startButton}
+            >
               読み始める
             </Link>
           )}
@@ -60,7 +67,14 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
       right={
         <>
           <h2 className={styles.pageHeading}>目次</h2>
-          <Toc slug={book.slug} sections={sections} />
+          {contents ? (
+            <Toc slug={book.slug} entries={contents.toc} />
+          ) : (
+            <p className={styles.description}>
+              本のフォルダが見つかりません（{book.folder}
+              {book.edition && `、版 ${book.edition}`}）。
+            </p>
+          )}
         </>
       }
     />

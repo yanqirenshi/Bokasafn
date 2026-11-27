@@ -1,0 +1,73 @@
+.section {
+  /* ページ内の位置に飛んだとき、見出しが上端に貼り付かないようにする */
+  scroll-margin: 16px;
+}
+
+.heading {
+  font-size: 1.25rem;
+  margin: 1.2em 0 0.6em;
+  letter-spacing: 0.08em;
+}
+
+.section .section .heading {
+  font-size: 1.1rem;
+}
+
+.ref {
+  line-height: 2.1;
+}
+
+.ref a::before {
+  content: "・";
+}
+
+.ref a:hover {
+  color: var(--accent);
+}
+
+.list {
+  margin: 0 0 1em 1.4em;
+  font-size: 1.12rem;
+  line-height: 2;
+}
+
+.figure {
+  margin: 1.2em 0;
+  text-align: center;
+}
+
+.figure img {
+  /* 横書きでは幅、縦書きでは高さを、本文の行の長さに収める */
+  max-inline-size: 100%;
+  block-size: auto;
+  border: 1px solid var(--paper-edge);
+}
+
+.figureText,
+.caption {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.tableWrap {
+  margin: 1.2em 0;
+  max-width: 100%;
+  overflow-x: auto;
+  /* 表は、縦書きのときも横書きのまま見せる */
+  writing-mode: horizontal-tb;
+}
+
+.table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.table td {
+  padding: 4px 8px;
+  border: 1px solid var(--paper-edge);
+  vertical-align: top;
+  white-space: pre-line;
+}
