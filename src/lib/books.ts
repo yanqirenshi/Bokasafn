@@ -15,6 +15,10 @@ export type Book = {
   /** 本を置いている本棚の key と名前 */
   bookcaseKey: string;
   bookcaseName: string;
+  /** 本のフォルダ（本の置き場からの相対パス） */
+  folder: string;
+  /** 読む版。null なら最新の版 */
+  edition: string | null;
   description: string | null;
   spineColor: string;
   sourceName: string;
@@ -36,10 +40,10 @@ export type Section = {
 export type SectionWithBody = Section & { body: string };
 
 const BOOK_COLUMNS = `
-  b.id, b.slug, b.title, b.era, b.category, b.description,
+  b.id, b.slug, b.name AS title, b.era, b.category, b.description,
   b.spine_color AS spineColor, b.source_name AS sourceName,
   b.source_url AS sourceUrl, b.license,
-  b.bookcase_key AS bookcaseKey,
+  b.bookcase_key AS bookcaseKey, b.folder, b.edition,
   (SELECT bc.name FROM bookcase bc WHERE bc.key = b.bookcase_key) AS bookcaseName,
   (SELECT COUNT(*) FROM sections s WHERE s.book_id = b.id) AS sectionCount,
   (SELECT COALESCE(SUM(LENGTH(s.body)), 0) FROM sections s WHERE s.book_id = b.id) AS charCount`;
@@ -70,7 +74,7 @@ export async function listBooks(): Promise<Book[]> {
   await connection();
   const rows = getDb()
     // 分類名ではなく取り込み順に並べる（本棚の既定の配置が分類を足しても変わらないように）
-    .prepare(`SELECT ${BOOK_COLUMNS} FROM books b ORDER BY b.position`)
+    .prepare(`SELECT ${BOOK_COLUMNS} FROM booklet b ORDER BY b.position`)
     .all() as BookRow[];
   return withAuthors(rows);
 }
@@ -100,7 +104,7 @@ export async function listShelfBooks(): Promise<ShelfBook[]> {
 export async function getBook(slug: string): Promise<Book | undefined> {
   await connection();
   const row = getDb()
-    .prepare(`SELECT ${BOOK_COLUMNS} FROM books b WHERE b.slug = ?`)
+    .prepare(`SELECT ${BOOK_COLUMNS} FROM booklet b WHERE b.slug = ?`)
     .get(slug) as BookRow | undefined;
   return row && withAuthors([row])[0];
 }

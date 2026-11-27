@@ -81,8 +81,8 @@ function charsOf(node: SectionNode): number {
 
 function exportBook(slug: string, outRoot: string, force: boolean): string {
   const db = getDb();
-  const book = db.prepare("SELECT * FROM books WHERE slug = ?").get(slug) as
-    | { id: number; title: string }
+  const book = db.prepare("SELECT * FROM booklet WHERE slug = ?").get(slug) as
+    | { id: number; name: string }
     | undefined;
   if (!book) throw new Error(`本が見つかりません: ${slug}`);
 
@@ -189,7 +189,7 @@ function exportBook(slug: string, outRoot: string, force: boolean): string {
   const sha256 = crypto.createHash("sha256").update(sourceText).digest("hex");
   const index = {
     version: 2,
-    title: book.title,
+    title: book.name,
     source: { book: SOURCE_FILE, sha256 },
     split_chars: SPLIT_CHARS,
     pages,
@@ -221,7 +221,7 @@ function main() {
   const targets =
     slugs.length > 0
       ? slugs
-      : (getDb().prepare("SELECT slug FROM books ORDER BY position, id").all() as { slug: string }[]).map(
+      : (getDb().prepare("SELECT slug FROM booklet ORDER BY position, id").all() as { slug: string }[]).map(
           (b) => b.slug,
         );
   console.log(`書き出し先: ${path.resolve(outRoot)}`);

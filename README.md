@@ -41,6 +41,19 @@ npm run export -- --force         # 既にある structure/original/ を作り�
 - センテンスは、全角の「。」「！」「？」と、その直後の閉じ括弧で区切ります。
 - 作り直すと ID が振り直されるので、既にある `structure/original/` は `--force` が無ければ上書きしません。
 
+### 冊子（booklet）と本のフォルダ
+
+棚に置く 1 冊を、冊子（`booklet`）と呼びます。
+冊子は本の内容を持たず、どこにあるかだけを持ちます。
+
+- `booklet.folder` — 本のフォルダ。本の置き場からの相対パスです。
+- `booklet.edition` — 読む版（`structure/<版>/` の名前）。空なら、最新の版（連番の最も大きい版。無ければ `original`）を読みます。
+- 本の置き場は、環境変数 `BOKASAFN_BOOKS_DIR` で指定します（既定は `data/books`）。
+- 一つのフォルダを、複数の冊子から指せます（原本の冊子と、校正した版の冊子など）。
+
+以前の DB（`books` テーブル）は、起動したときに `booklet` に改名して引き継ぎます。
+本のフォルダは、slug と同じ名前になります。
+
 経緯は [migration/tyggja-pipeline-handoff.md](migration/tyggja-pipeline-handoff.md) にあります。
 
 ## 収録書と取り込み元
@@ -90,8 +103,9 @@ ctext.org はサイトのスクレイピングを利用規約で禁止してお�
 
 ## 構成
 
-- `src/lib/db.ts` — SQLite の接続とスキーマ（`books`, `sections`）
+- `src/lib/db.ts` — SQLite の接続とスキーマ（`booklet`, `user`, `sections` など）
 - `src/lib/books.ts` — 画面から使うデータ取得関数
+- `src/lib/structure.ts` — 本のフォルダ（`structure/<版>/`）を読む関数。画面からは、まだ使っていない
 - `src/app/page.tsx` — 本棚（SVG。ズーム・パンでき、本を選ぶと右端のインスペクターに情報を出す）
 - `src/components/library/` — SVG の本棚・ズーム処理・インスペクター
 - `src/app/books/[slug]/page.tsx` — 本の扉と目次

@@ -11,7 +11,7 @@ import type { AnyNode, Element } from "domhandler";
 import fs from "node:fs";
 import path from "node:path";
 import { parseAuthors } from "../src/lib/authors";
-import { addBookAuthors, bookcaseKeyOf, ensureBookcase, getDb } from "../src/lib/db";
+import { addBookAuthors, bookcaseKeyOf, DEFAULT_USER_ID, ensureBookcase, getDb } from "../src/lib/db";
 
 type BookConfig = {
   slug: string;
@@ -702,10 +702,12 @@ function prune(node: SectionNode): SectionNode | undefined {
 function save(book: BookConfig & { category: string }, position: number, tree: SectionNode) {
   const db = getDb();
   const insertBook = db.prepare(`
-    INSERT INTO books (slug, title, era, category, description, spine_color, position,
-                       source_name, source_url, license, imported_at, bookcase_key)
+    INSERT INTO booklet (slug, name, era, category, description, spine_color, position,
+                         source_name, source_url, license, imported_at, bookcase_key,
+                         folder, created_at, created_by, updated_at, updated_by)
     VALUES (@slug, @title, @era, @category, @description, @spineColor, @position,
-            '維基文庫', @sourceUrl, 'Public domain', datetime('now'), @bookcaseKey)`);
+            '維基文庫', @sourceUrl, 'Public domain', datetime('now'), @bookcaseKey,
+            @slug, datetime('now'), @userId, datetime('now'), @userId)`);
   const insertSection = db.prepare(`
     INSERT INTO sections (book_id, parent_id, position, depth, title, body)
     VALUES (?, ?, ?, ?, ?, ?)`);
@@ -713,17 +715,18 @@ function save(book: BookConfig & { category: string }, position: number, tree: S
   let count = 0;
   db.transaction(() => {
     // 取り込み直すときは、いま置いてある本棚に戻す。初めてなら分類ごとの本棚（無ければ作る）に置く
-    const placed = db.prepare("SELECT bookcase_key FROM books WHERE slug = ?").get(book.slug) as
+    const placed = db.prepare("SELECT bookcase_key FROM booklet WHERE slug = ?").get(book.slug) as
       | { bookcase_key: string | null }
       | undefined;
     const bookcaseKey = placed?.bookcase_key ?? bookcaseKeyOf(book.category);
     ensureBookcase(db, bookcaseKey, book.category);
-    db.prepare("DELETE FROM books WHERE slug = ?").run(book.slug);
+    db.prepare("DELETE FROM booklet WHERE slug = ?").run(book.slug);
     const bookId = insertBook.run({
       ...book,
       position,
       sourceUrl: pageUrl(book.page),
       bookcaseKey,
+      userId: DEFAULT_USER_ID,
     }).lastInsertRowid;
     addBookAuthors(db, bookId, parseAuthors(book.author));
 
