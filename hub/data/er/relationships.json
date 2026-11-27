@@ -1,57 +1,5 @@
 [
     {
-        "id": 10000068,
-        "type": "FK",
-        "from": {
-            "entity": 1,
-            "cardinality": 1,
-            "optionality": 1,
-            "position": 270
-        },
-        "to": {
-            "entity": 2,
-            "cardinality": 3,
-            "optionality": 0,
-            "position": 90
-        },
-        "details": [
-            {
-                "from": {
-                    "id": 7
-                },
-                "to": {
-                    "id": 34
-                }
-            }
-        ]
-    },
-    {
-        "id": 10000071,
-        "type": "FK",
-        "from": {
-            "entity": 2,
-            "cardinality": 1,
-            "optionality": 0,
-            "position": 290
-        },
-        "to": {
-            "entity": 2,
-            "cardinality": 3,
-            "optionality": 0,
-            "position": 250
-        },
-        "details": [
-            {
-                "from": {
-                    "id": 32
-                },
-                "to": {
-                    "id": 36
-                }
-            }
-        ]
-    },
-    {
         "id": 10000074,
         "type": "FK",
         "from": {
