@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import": "tsx scripts/import-wikisource.ts",
-    "export": "tsx scripts/export-structure.ts"
+    "import": "tsx --env-file-if-exists=.env.local scripts/import-wikisource.ts",
+    "export": "tsx --env-file-if-exists=.env.local scripts/export-structure.ts",
+    "booklet": "tsx --env-file-if-exists=.env.local scripts/booklet.ts"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

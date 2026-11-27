@@ -74,13 +74,19 @@ export function Inspector({ book, onClose }: { book: ShelfBook; onClose: () => v
         </section>
       )}
 
-      <p className={styles.source}>
-        底本：
-        <a href={book.sourceUrl} target="_blank" rel="noreferrer">
-          {book.sourceName}
-        </a>
-        {book.license && `（${book.license}）`}
-      </p>
+      {(book.sourceName || book.sourceUrl) && (
+        <p className={styles.source}>
+          底本：
+          {book.sourceUrl ? (
+            <a href={book.sourceUrl} target="_blank" rel="noreferrer">
+              {book.sourceName || book.sourceUrl}
+            </a>
+          ) : (
+            book.sourceName
+          )}
+          {book.license && `（${book.license}）`}
+        </p>
+      )}
     </aside>
   );
 }

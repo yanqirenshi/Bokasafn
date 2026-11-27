@@ -55,13 +55,21 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
               読み始める
             </Link>
           )}
-          <p className={styles.source}>
-            底本：
-            <a href={book.sourceUrl} target="_blank" rel="noreferrer">
-              {book.sourceName}「{book.title}」
-            </a>
-            {book.license && `（${book.license}）`}
-          </p>
+          {(book.sourceName || book.sourceUrl) && (
+            <p className={styles.source}>
+              底本：
+              {book.sourceUrl ? (
+                <a href={book.sourceUrl} target="_blank" rel="noreferrer">
+                  {book.sourceName}「{book.title}」
+                </a>
+              ) : (
+                <>
+                  {book.sourceName}「{book.title}」
+                </>
+              )}
+              {book.license && `（${book.license}）`}
+            </p>
+          )}
         </div>
       }
       right={

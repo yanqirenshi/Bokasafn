@@ -43,9 +43,31 @@ npm run import -- shanghan-lun
 
 - `booklet.folder` — 本のフォルダ。本の置き場からの相対パスです。
 - `booklet.edition` — 読む版（`structure/<版>/` の名前）。空なら、最新の版（連番の最も大きい版。無ければ `original`）を読みます。
-- 本の置き場は、環境変数 `BOKASAFN_BOOKS_DIR` で指定します（既定は `data/books`）。
+- 本の置き場は、環境変数 `BOKASAFN_BOOKS_DIR` で指定します（既定は `data/books`）。`.env.local` に書くと、アプリとスクリプトの両方が読みます。
 - 一つのフォルダを、複数の冊子から指せます（原本の冊子と、校正した版の冊子など）。
 - 本のフォルダや版が見つからない冊子は、本棚には出ますが、読めません（案内を出します）。
+- ウィキソースから取り込む本は、新しく取り込むと `<本の置き場>/<slug>/` に書きます。取り込み直すときは、冊子が指しているフォルダに書きます。
+
+### 冊子を登録する
+
+Tyggja・Melta が作った本のフォルダは、コマンドで冊子として登録します。
+
+```bash
+npm run booklet -- list
+# 冊子の一覧と、まだ冊子になっていない本のフォルダを出す
+
+npm run booklet -- add "<本のフォルダ>" --slug <名前> --category <分類> --name "<冊子の名前>"
+# 本のフォルダ（本の置き場からの相対パス）を、冊子として登録する
+
+npm run booklet -- set <slug> --edition <版>
+# 読む版を変える（latest で、最新の版に戻す）。--folder と --name も変えられる
+```
+
+- `--slug` は URL に使う名前で、英小文字・数字・ハイフンで書きます。
+- `--category` は分類で、置く本棚を決めます（その分類の本棚が無ければ作ります）。
+- 省くと、名前は `index.json` の `title`、背表紙の色は決まった色の中から選びます。
+- 著者（`--author`）・時代（`--era`）・説明（`--description`）・出典（`--source-name`、`--source-url`）・ライセンス（`--license`）も指定できます。出典が空の本は、画面に底本を出しません。
+- 古い配置の本のフォルダ（`structure/original/` が無い）は、先に `tyggja structure "<本のフォルダ>"` で原本を作ります。
 
 ### 本の内容の形式
 
