@@ -4,5 +4,7 @@
     { "id": 20002, "name": "created_at" },
     { "id": 20003, "name": "created_by" },
     { "id": 20004, "name": "updated_at" },
-    { "id": 20005, "name": "updated_by" }
+    { "id": 20005, "name": "updated_by" },
+    { "id": 20006, "name": "folder" },
+    { "id": 20007, "name": "edition" }
 ]
