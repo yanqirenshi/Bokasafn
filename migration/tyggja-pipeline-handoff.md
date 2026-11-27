@@ -36,8 +36,10 @@ hub は `npm --prefix hub run start` で起動します。
 ポートは、既定では画面が 3000、API が 4000 です。
 `.claude/launch.json` の `hub` の設定で起動すると、画面が 3200、API が 4200 になります。
 Tyggja の hub も既定で同じポートを使うので、どちらの hub の画面を見ているかを確かめてください。
-この図には、Bokasafn の枠と、Bokasafn から本のフォルダへの矢印も描かれています。
-この矢印は、Bokasafn が本のフォルダを読むことを表します（12 章）。
+この図には、Bokasafn の枠も描かれています。
+枠の中には、冊子の登録、ウィキソースからの取り込み、SQLite、web app での表示があります。
+`structure/` と `figures/` から「web app で表示」への矢印は、Bokasafn が本のフォルダを読むことを表します（12 章）。
+「取り込み」から `original/` への矢印は、ウィキソースの本の原本を Bokasafn が書くことを表します。
 
 ## 2. リポジトリの場所
 
@@ -317,7 +319,7 @@ Bokasafn で同じ問いが出たときのために、理由を残します。
 
 1. **Bokasafn が、このデータをどう使うか。** → 決定。
    冊子（booklet）を SQLite に持ち、本の内容は本のフォルダを直接読みます。
-   overview の図の、Bokasafn から本のフォルダへの矢印は、「読む」ことを表します。
+   overview の図の、`structure/` と `figures/` から Bokasafn の「web app で表示」への矢印は、「読む」ことを表します。
 2. **`{book-code}` の付け方。** → 急いで決めなくてよくなりました。
    Bokasafn が本のフォルダを相対パスで持つので、フォルダの名前は自由です。
    ウィキソースの本は、`wikisource/{slug}/` に置いています。
