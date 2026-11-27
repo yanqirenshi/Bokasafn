@@ -10,8 +10,8 @@
     {
         "id": 10,
         "name": {
-            "logical": "書名",
-            "physical": "title"
+            "logical": "名前",
+            "physical": "name"
         },
         "data_type": "TEXT NOT NULL"
     },
@@ -224,5 +224,49 @@
             "physical": "bookcase_key"
         },
         "data_type": "TEXT"
+    },
+    {
+        "id": 10000200,
+        "name": {
+            "logical": "本のフォルダ",
+            "physical": "folder"
+        },
+        "description": "本の置き場（BOKASAFN_BOOKS_DIR）からの相対パス",
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 10000201,
+        "name": {
+            "logical": "版",
+            "physical": "edition"
+        },
+        "description": "読む版（structure/<版>/ の名前）。NULL なら最新の版",
+        "data_type": "TEXT"
+    },
+    {
+        "id": 10000202,
+        "name": {
+            "logical": "作成日時",
+            "physical": "created_at"
+        },
+        "data_type": "TEXT NOT NULL"
+    },
+    {
+        "id": 10000203,
+        "name": {
+            "logical": "作成者",
+            "physical": "created_by"
+        },
+        "description": "ユーザーの ID",
+        "data_type": "INTEGER"
+    },
+    {
+        "id": 10000204,
+        "name": {
+            "logical": "更新者",
+            "physical": "updated_by"
+        },
+        "description": "ユーザーの ID",
+        "data_type": "INTEGER"
     }
 ]

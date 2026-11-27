@@ -154,5 +154,57 @@
                 }
             }
         ]
+    },
+    {
+        "id": 10000230,
+        "type": "FK",
+        "from": {
+            "entity": 10000220,
+            "cardinality": 1,
+            "optionality": 0,
+            "position": 300
+        },
+        "to": {
+            "entity": 1,
+            "cardinality": 3,
+            "optionality": 0,
+            "position": 120
+        },
+        "details": [
+            {
+                "from": {
+                    "id": 10000221
+                },
+                "to": {
+                    "id": 10000213
+                }
+            }
+        ]
+    },
+    {
+        "id": 10000231,
+        "type": "FK",
+        "from": {
+            "entity": 10000220,
+            "cardinality": 1,
+            "optionality": 0,
+            "position": 320
+        },
+        "to": {
+            "entity": 1,
+            "cardinality": 3,
+            "optionality": 0,
+            "position": 140
+        },
+        "details": [
+            {
+                "from": {
+                    "id": 10000221
+                },
+                "to": {
+                    "id": 10000215
+                }
+            }
+        ]
     }
 ]
