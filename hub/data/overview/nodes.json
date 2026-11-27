@@ -118,7 +118,7 @@
         "id": 9,
         "type": "NODE",
         "label": {
-            "text": "Frasoga (別リポジトリ)",
+            "text": "Frasoga",
             "font": {
                 "size": 18,
                 "weight": "bold",
@@ -234,7 +234,7 @@
         "id": 7,
         "type": "NODE",
         "label": {
-            "text": "Melta (別リポジトリ)",
+            "text": "Melta",
             "font": {
                 "size": 18,
                 "weight": "bold",
@@ -584,7 +584,7 @@
         "type": "NODE",
         "_class": "BRANCH",
         "label": {
-            "text": "Bokasafn (別リポジトリ)",
+            "text": "Bokasafn",
             "font": {
                 "size": 18,
                 "weight": "bold",
