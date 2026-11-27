@@ -4,25 +4,29 @@
         "from": {
             "id": 100,
             "entity": 30000,
-            "position": 270
+            "position": 0,
+            "cardinality": 1
         },
         "to": {
-            "id": 101,
+            "id": 102,
             "entity": 30002,
-            "position": 90
+            "position": 270,
+            "cardinality": 3
         }
     },
     {
         "id": 2,
         "from": {
-            "id": 103,
+            "id": 101,
             "entity": 30001,
-            "position": 270
+            "position": 0,
+            "cardinality": 1
         },
         "to": {
-            "id": 102,
+            "id": 103,
             "entity": 30002,
-            "position": 90
+            "position": 90,
+            "cardinality": 1
         }
     }
 ]

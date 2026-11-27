@@ -2,11 +2,11 @@
     {
         "id": 30000,
         "type": "RESOURCE",
-        "name": "Firebase Auth",
-        "description": "User",
+        "name": "User",
+        "description": "",
         "position": {
-            "x": -300,
-            "y": -100,
+            "x": 0,
+            "y": 0,
             "z": 0
         },
         "size": {
@@ -19,43 +19,41 @@
                 "identifier": 10000
             }
         ],
-        "attributes": []
-    },
-    {
-        "id": 30001,
-        "type": "RESOURCE",
-        "name": "Firebase Auth Provider",
-        "description": "User",
-        "position": {
-            "x": -300,
-            "y": 100,
-            "z": 0
-        },
-        "size": {
-            "w": 0,
-            "h": 0
-        },
-        "identifiers": [
-            {
-                "id": 103,
-                "identifier": 10001
-            }
-        ],
         "attributes": [
             {
                 "id": 400,
                 "attribute": 20000
+            },
+            {
+                "id": 401,
+                "attribute": 20001
+            },
+            {
+                "id": 402,
+                "attribute": 20002
+            },
+            {
+                "id": 403,
+                "attribute": 20003
+            },
+            {
+                "id": 404,
+                "attribute": 20004
+            },
+            {
+                "id": 405,
+                "attribute": 20005
             }
         ]
     },
     {
-        "id": 30002,
-        "type": "EVENT",
-        "name": "Firebase Auth Provider 認証",
+        "id": 30001,
+        "type": "RESOURCE",
+        "name": "Booklet",
         "description": "",
         "position": {
-            "x": 100,
-            "y": -100,
+            "x": 400,
+            "y": 0,
             "z": 0
         },
         "size": {
@@ -65,21 +63,80 @@
         "identifiers": [
             {
                 "id": 101,
-                "identifier": 10000
-            },
-            {
-                "id": 102,
                 "identifier": 10001
             }
         ],
         "attributes": [
             {
-                "id": 300,
+                "id": 406,
+                "attribute": 20000
+            },
+            {
+                "id": 407,
+                "attribute": 20001
+            },
+            {
+                "id": 408,
                 "attribute": 20002
             },
             {
-                "id": 301,
+                "id": 409,
                 "attribute": 20003
+            },
+            {
+                "id": 410,
+                "attribute": 20004
+            },
+            {
+                "id": 411,
+                "attribute": 20005
+            }
+        ]
+    },
+    {
+        "id": 30002,
+        "type": "EVENT",
+        "name": "Create Booklet",
+        "description": "",
+        "position": {
+            "x": 290,
+            "y": 463,
+            "z": 0
+        },
+        "size": {
+            "w": 0,
+            "h": 0
+        },
+        "identifiers": [
+            {
+                "id": 102,
+                "identifier": 10000
+            },
+            {
+                "id": 103,
+                "identifier": 10001
+            }
+        ],
+        "attributes": [
+            {
+                "id": 412,
+                "attribute": 20001
+            },
+            {
+                "id": 413,
+                "attribute": 20002
+            },
+            {
+                "id": 414,
+                "attribute": 20003
+            },
+            {
+                "id": 415,
+                "attribute": 20004
+            },
+            {
+                "id": 416,
+                "attribute": 20005
             }
         ]
     }
