@@ -3,6 +3,6 @@
     { "id": 20001, "name": "description" },
     { "id": 20002, "name": "created_at" },
     { "id": 20003, "name": "created_by" },
-    { "id": 20004, "name": "update_at" },
-    { "id": 20005, "name": "update_by" }
+    { "id": 20004, "name": "updated_at" },
+    { "id": 20005, "name": "updated_by" }
 ]

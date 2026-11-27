@@ -52,8 +52,8 @@
         "name": "Booklet",
         "description": "",
         "position": {
-            "x": 400,
-            "y": 0,
+            "x": -52,
+            "y": 915,
             "z": 0
         },
         "size": {
@@ -99,8 +99,8 @@
         "name": "Create Booklet",
         "description": "",
         "position": {
-            "x": 290,
-            "y": 463,
+            "x": 361,
+            "y": 446,
             "z": 0
         },
         "size": {

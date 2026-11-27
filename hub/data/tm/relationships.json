@@ -10,7 +10,7 @@
         "to": {
             "id": 102,
             "entity": 30002,
-            "position": 270,
+            "position": 100,
             "cardinality": 3
         }
     },
@@ -19,13 +19,13 @@
         "from": {
             "id": 101,
             "entity": 30001,
-            "position": 0,
+            "position": 180,
             "cardinality": 1
         },
         "to": {
             "id": 103,
             "entity": 30002,
-            "position": 90,
+            "position": 80,
             "cardinality": 1
         }
     }
