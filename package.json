@@ -7,11 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import": "tsx scripts/import-wikisource.ts"
+    "import": "tsx --env-file-if-exists=.env.local scripts/import-wikisource.ts",
+    "export": "tsx --env-file-if-exists=.env.local scripts/export-structure.ts",
+    "booklet": "tsx --env-file-if-exists=.env.local scripts/booklet.ts"
   },
   "dependencies": {
+    "@yanqirenshi/frasoga": "~0.2.0",
     "better-sqlite3": "^13.0.3",
-    "next": "16.4.2",
+    "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -22,7 +25,7 @@
     "@types/react-dom": "^19",
     "cheerio": "^1.2.0",
     "eslint": "^9",
-    "eslint-config-next": "16.4.2",
+    "eslint-config-next": "16.4.6",
     "tsx": "^4.23.15",
     "typescript": "^5"
   }

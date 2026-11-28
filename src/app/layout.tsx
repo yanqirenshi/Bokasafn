@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="zh-Hant">
-      <body>{children}</body>
+      {/* ブラウザの拡張機能が body に属性を足すことがある（ColorZilla の cz-shortcut-listen など）。
+          body の属性の違いだけ、ハイドレーションの警告を出さない。子の要素には及ばない。 */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

@@ -1,57 +1,5 @@
 [
     {
-        "id": 10000068,
-        "type": "FK",
-        "from": {
-            "entity": 1,
-            "cardinality": 1,
-            "optionality": 1,
-            "position": 270
-        },
-        "to": {
-            "entity": 2,
-            "cardinality": 3,
-            "optionality": 0,
-            "position": 90
-        },
-        "details": [
-            {
-                "from": {
-                    "id": 7
-                },
-                "to": {
-                    "id": 34
-                }
-            }
-        ]
-    },
-    {
-        "id": 10000071,
-        "type": "FK",
-        "from": {
-            "entity": 2,
-            "cardinality": 1,
-            "optionality": 0,
-            "position": 290
-        },
-        "to": {
-            "entity": 2,
-            "cardinality": 3,
-            "optionality": 0,
-            "position": 250
-        },
-        "details": [
-            {
-                "from": {
-                    "id": 32
-                },
-                "to": {
-                    "id": 36
-                }
-            }
-        ]
-    },
-    {
         "id": 10000074,
         "type": "FK",
         "from": {
@@ -151,6 +99,58 @@
                 },
                 "to": {
                     "id": 86
+                }
+            }
+        ]
+    },
+    {
+        "id": 10000230,
+        "type": "FK",
+        "from": {
+            "entity": 10000220,
+            "cardinality": 1,
+            "optionality": 0,
+            "position": 300
+        },
+        "to": {
+            "entity": 1,
+            "cardinality": 3,
+            "optionality": 0,
+            "position": 120
+        },
+        "details": [
+            {
+                "from": {
+                    "id": 10000221
+                },
+                "to": {
+                    "id": 10000213
+                }
+            }
+        ]
+    },
+    {
+        "id": 10000231,
+        "type": "FK",
+        "from": {
+            "entity": 10000220,
+            "cardinality": 1,
+            "optionality": 0,
+            "position": 320
+        },
+        "to": {
+            "entity": 1,
+            "cardinality": 3,
+            "optionality": 0,
+            "position": 140
+        },
+        "details": [
+            {
+                "from": {
+                    "id": 10000221
+                },
+                "to": {
+                    "id": 10000215
                 }
             }
         ]

@@ -1,9 +1,9 @@
 [
     {
         "id": 1,
-        "name": "本",
-        "code": "books",
-        "description": "本",
+        "name": "冊子",
+        "code": "booklet",
+        "description": "冊子。本のフォルダの、ある版を、1 冊として棚に置いたもの。本の内容は持たない",
         "position": {
             "x": -450,
             "y": -250,
@@ -13,7 +13,7 @@
             "w": 222,
             "h": 333
         },
-        "physical_name": "books",
+        "physical_name": "booklet",
         "identifiers": [
             {
                 "id": 7,
@@ -68,54 +68,30 @@
             {
                 "id": 86,
                 "attribute": 85
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "name": "章・節",
-        "code": "sections",
-        "description": "本の章・節（parent_id で入れ子）",
-        "position": {
-            "x": -76,
-            "y": -186,
-            "z": 0
-        },
-        "size": {
-            "w": 222,
-            "h": 333
-        },
-        "physical_name": "sections",
-        "identifiers": [
-            {
-                "id": 32,
-                "identifier": 6
-            }
-        ],
-        "attributes": [
-            {
-                "id": 34,
-                "attribute": 33
             },
             {
-                "id": 36,
-                "attribute": 35
+                "id": 10000210,
+                "attribute": 10000200
             },
             {
-                "id": 37,
-                "attribute": 22
+                "id": 10000211,
+                "attribute": 10000201
             },
             {
-                "id": 39,
-                "attribute": 38
+                "id": 10000212,
+                "attribute": 10000202
             },
             {
-                "id": 40,
-                "attribute": 10000100
+                "id": 10000213,
+                "attribute": 10000203
             },
             {
-                "id": 42,
-                "attribute": 41
+                "id": 10000214,
+                "attribute": 49
+            },
+            {
+                "id": 10000215,
+                "attribute": 10000204
             }
         ]
     },
@@ -300,6 +276,54 @@
             {
                 "id": 79,
                 "attribute": 10000103
+            }
+        ]
+    },
+    {
+        "id": 10000220,
+        "name": "ユーザー",
+        "code": "user",
+        "description": "ユーザー。いまは既定のユーザーが 1 人だけ居る（ログインは、まだ無い）",
+        "position": {
+            "x": -941,
+            "y": -500,
+            "z": 0
+        },
+        "size": {
+            "w": 222,
+            "h": 333
+        },
+        "physical_name": "user",
+        "identifiers": [
+            {
+                "id": 10000221,
+                "identifier": 6
+            }
+        ],
+        "attributes": [
+            {
+                "id": 10000222,
+                "attribute": 10000104
+            },
+            {
+                "id": 10000223,
+                "attribute": 18
+            },
+            {
+                "id": 10000224,
+                "attribute": 10000202
+            },
+            {
+                "id": 10000225,
+                "attribute": 10000203
+            },
+            {
+                "id": 10000226,
+                "attribute": 49
+            },
+            {
+                "id": 10000227,
+                "attribute": 10000204
             }
         ]
     }

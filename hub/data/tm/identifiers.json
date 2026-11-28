@@ -1,12 +1,12 @@
 [
     {
         "id": 10000,
-        "name": "firebase_uid",
+        "name": "user_id",
         "description": ""
     },
     {
         "id": 10001,
-        "name": "firebase_auth_provider_id",
+        "name": "booklet_id",
         "description": ""
     }
 ]
