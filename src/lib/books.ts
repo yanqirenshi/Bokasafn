@@ -1,6 +1,8 @@
 import { connection } from "next/server";
+import type { BookIndex } from "@yanqirenshi/frasoga";
 import type { AuthorRole } from "./authors";
 import { getDb } from "./db";
+import { toReaderIndex } from "./reader";
 import {
   flattenToc,
   readIndex,
@@ -167,6 +169,13 @@ export async function getContents(book: Book): Promise<BookContents | undefined>
     toc.unshift({ id: FRONT_PAGE_ID, depth: 0, title: FRONT_TITLE, pageId: FRONT_PAGE_ID, isPage: true });
   }
   return { toc, pageIds: index.files.map(pageIdOf) };
+}
+
+/** 目次の表示に渡すデータ（Frasoga の目次の形）。本のフォルダが見つからなければ undefined */
+export async function getReaderIndex(book: Book): Promise<BookIndex | undefined> {
+  await connection();
+  if (!book.readingEdition) return undefined;
+  return toReaderIndex(readIndex(book.folder, book.readingEdition));
 }
 
 /** 目次の行から、その場所へのリンク先を作る。ページの途中にあるセクションは、ページ内の位置を指す */

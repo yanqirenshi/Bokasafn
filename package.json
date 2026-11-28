@@ -12,6 +12,7 @@
     "booklet": "tsx --env-file-if-exists=.env.local scripts/booklet.ts"
   },
   "dependencies": {
+    "@yanqirenshi/frasoga": "~0.2.0",
     "better-sqlite3": "^13.0.3",
     "next": "16.4.6",
     "react": "19.3.0",

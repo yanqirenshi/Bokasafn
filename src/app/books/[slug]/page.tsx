@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OpenBook } from "@/components/OpenBook";
-import { Toc } from "@/components/Toc";
+import { BookToc } from "@/components/reader/BookToc";
 import { formatAuthors } from "@/lib/authors";
-import { getBook, getContents } from "@/lib/books";
+import { getBook, getContents, getReaderIndex } from "@/lib/books";
 import styles from "../book.module.css";
 
 export async function generateMetadata({ params }: PageProps<"/books/[slug]">): Promise<Metadata> {
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps<"/books/[slug]">): 
 export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
   const book = await getBook((await params).slug);
   if (!book) notFound();
-  const contents = await getContents(book);
+  const [contents, index] = await Promise.all([getContents(book), getReaderIndex(book)]);
   const first = contents?.pageIds[0];
 
   return (
@@ -75,8 +75,8 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
       right={
         <>
           <h2 className={styles.pageHeading}>目次</h2>
-          {contents ? (
-            <Toc slug={book.slug} entries={contents.toc} />
+          {index ? (
+            <BookToc slug={book.slug} index={index} />
           ) : (
             <p className={styles.description}>
               本のフォルダが見つかりません（{book.folder}

@@ -5,8 +5,10 @@
 
 - 図書館の SVG に本棚が並び、ズームすると背表紙の書名が読めます。
 - 本を選ぶと右端のインスペクターに概要が出て、「読む」で本文を開けます。
-- 本文は横書きと縦書きを切り替えられます。
+- 本文は、一文ずつ読み進められます（←→ のキーか、文のクリックで移動します）。
+- 本文は横書きと縦書きを切り替えられます。縦書きでは、← が次の文です。
 - 本文は、段落のほかに、箇条書き・図・表を表示できます。
+- 本文と目次は、Frasoga の表示コンポーネント（`@yanqirenshi/frasoga`）で描いています。
 - Next.js (App Router) と SQLite (better-sqlite3) で作っています。本の内容は、本のフォルダの JSON で持ちます。
 
 ## 使い方
@@ -73,7 +75,8 @@ npm run booklet -- set <slug> --edition <版>
 
 - 形式は、Tyggja の `structure/`（`index.json` とセクション単位のファイル）と同じです。形式の正本は、[Hefti](https://github.com/yanqirenshi/Hefti)（`@yanqirenshi/hefti`）の JSON Schema です。
 - 本文の 1 ページは、分けたファイル 1 つです。URL は `/books/{slug}/{ファイルの先頭のセクションの ID}`（例 `/books/lunyu/s3`）で、小さい子のセクションは、同じページの中に見出し付きで並びます。
-- センテンスが本文の正本です。画面では、段落としてつなげて見せます。
+- センテンスが本文の正本です。画面では、1 文を 1 行で見せ、読んでいる文を強調します。
+- ページ内のセクションには、`#セクションの ID` で飛べます。開くと、そのセクションの見出しを強調します。
 
 ウィキソースから取り込む本は、次の決まりで原本にします（`scripts/lib/write-structure.ts`）。
 
@@ -148,7 +151,8 @@ ctext.org はサイトのスクレイピングを利用規約で禁止してお�
 - `src/lib/db.ts` — SQLite の接続とスキーマ（`booklet`, `user` など）
 - `src/lib/structure.ts` — 本のフォルダ（`structure/<版>/`）を読む関数
 - `src/lib/books.ts` — 画面から使うデータ取得関数（冊子は SQLite、目次と本文は本のフォルダから読む）
-- `src/components/StructureBody.tsx` — 本文の要素（段落・箇条書き・図・表）を描く部品
+- `src/lib/reader.ts` — 本のフォルダの JSON を、Frasoga に渡す形にする関数
+- `src/components/reader/` — Frasoga の表示コンポーネントの包み（本文 `BookReader`、目次 `BookToc`、リンク、色の割り当て）
 - `src/app/page.tsx` — 本棚（SVG。ズーム・パンでき、本を選ぶと右端のインスペクターに情報を出す）
 - `src/components/library/` — SVG の本棚・ズーム処理・インスペクター
 - `src/app/books/[slug]/page.tsx` — 本の扉と目次
