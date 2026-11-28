@@ -33,7 +33,7 @@
 }
 
 .toc {
-  line-height: 1.6;
+  --frasoga-toc-line-height: 1.6;
 }
 
 .switch {

@@ -1,5 +1,5 @@
 import type { BodyNode, BookIndex, Part, TocEntry } from "@yanqirenshi/frasoga";
-import type { StructureIndex, StructureNode, StructurePart, TocNode } from "./structure";
+import type { StructureIndex, StructurePart, TocNode } from "./structure";
 
 // 本のフォルダの JSON を、Frasoga の表示コンポーネントに渡す形にする。
 // ブラウザに送るので、表示に要るものだけを残す。
@@ -23,24 +23,11 @@ export function toReaderIndex(index: StructureIndex): BookIndex {
   };
 }
 
-function bodyNode(node: StructureNode): BodyNode {
-  switch (node.type) {
-    case "section":
-      return { ...node, children: node.children.map(bodyNode) };
-    case "figure":
-      // 図の文字は、文字列のこともある。Frasoga は配列を前提にしている
-      return {
-        type: "figure",
-        id: node.id,
-        src: node.src || null,
-        text: Array.isArray(node.text) ? node.text : node.text ? [node.text] : [],
-      };
-    default:
-      return node;
-  }
-}
-
-/** 本文の 1 ファイルを、Frasoga に渡す形にする */
+/**
+ * 本文の 1 ファイルを、Frasoga に渡す形にする。
+ * 要素は、そのまま渡す。図の文字は文字列のこともあるが、Frasoga（0.2.1 から）が配列として扱う。
+ * Frasoga の型は配列だけなので、ここで型を合わせる。
+ */
 export function toReaderPart(part: StructurePart): Part {
-  return { file: part.file, body: part.body.map(bodyNode) };
+  return { file: part.file, body: part.body as BodyNode[] };
 }
