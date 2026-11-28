@@ -174,10 +174,18 @@ structure/original/
 
 ### 4.5 JSON スキーマ
 
-形式は、Tyggja のリポジトリの JSON Schema（draft 2020-12）で定めています。
+形式は、JSON Schema（draft 2020-12）で定めています。
 
-- `C:\Users\yanqi\prj\Tyggja\schema\structure-index.schema.json`
-- `C:\Users\yanqi\prj\Tyggja\schema\structure-part.schema.json`
+**2026-11-28 から、形式の正本は Hefti です。**
+Tyggja・Melta・Frasoga・Bokasafn で共有するため、スキーマを独立したリポジトリに切り出しました。
+検証の規則は、変わっていません。
+
+- リポジトリ: https://github.com/yanqirenshi/Hefti
+- npm のパッケージ: `@yanqirenshi/hefti`（メジャーの番号は、データ形式の版 `version: 2` と同じ）
+- スキーマ: `schema/structure-index.schema.json` と `schema/structure-part.schema.json`
+
+この文書を書いた時点（2026-11-25）では、Tyggja のリポジトリの `schema/` が正本でした。
+Tyggja の `schema/` は、いまは Hefti のコピーです。
 
 2 つは互いを参照しないので、ファイルをコピーするだけで使えます（Melta は、コピーしてバイナリに埋め込んでいます）。
 すべてのプロパティに、日本語の説明が付いています。
@@ -355,7 +363,7 @@ Bokasafn で同じ問いが出たときのために、理由を残します。
 | 知りたいこと | 場所 |
 |---|---|
 | 原本の形式の説明 | `C:\Users\yanqi\prj\Tyggja\README.md` の「structure/ の形式」 |
-| 原本の形式の定義 | `C:\Users\yanqi\prj\Tyggja\schema\` |
+| 原本の形式の定義（正本） | Hefti（https://github.com/yanqirenshi/Hefti 、`@yanqirenshi/hefti`）。Tyggja の `schema/` は、そのコピー |
 | 構造化の決まり（見出しのレベル、ページまたぎ、センテンスの分割） | `C:\Users\yanqi\prj\Tyggja\README.md` の「structure が決めていること」 |
 | 構造化の実装 | `C:\Users\yanqi\prj\Tyggja\src\tyggja\structure.py` |
 | 構造化のテスト（形式の例として読める） | `C:\Users\yanqi\prj\Tyggja\tests\` |
@@ -382,7 +390,7 @@ Bokasafn の設計のセッションで決めたことです。
 2. **冊子の ID は、Bokasafn が採番する。**
    本のフォルダの名前とは、切り離しています。
    Tyggja は、Bokasafn が本を知る前にフォルダを作るためです。
-3. **本の内容の形式は、Tyggja の JSON スキーマをそのまま使う。**
+3. **本の内容の形式は、Tyggja が作る形式（正本は Hefti の JSON スキーマ）をそのまま使う。**
    Bokasafn は、形式を変えていません。
    ウィキソースから取り込んだ古典 34 冊も、同じ形式の原本にしました。
 4. **本文は、Frasoga の表示コンポーネントで描く（2026-11-28 に決定。組み込みはこれから）。**

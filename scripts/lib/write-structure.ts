@@ -2,7 +2,7 @@
  * 本の原本（<本のフォルダ>/structure/original/）を書く。
  *
  * 形式は Tyggja の structure/original/（index.json とセクション単位のファイル）と同じ。
- * 形式の正本は、Tyggja のリポジトリの schema/ と README。
+ * 形式の正本は、Hefti（@yanqirenshi/hefti）の JSON Schema。
  *
  * スキャンした本を前提にした項目には、次の値を入れる。
  *   - ページ        : 取り込んだ 1 つのセクション（篇）を、1 ページとして扱う（p001_1 …）

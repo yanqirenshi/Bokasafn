@@ -1,7 +1,7 @@
 /**
  * 本のフォルダ（<本の置き場>/<folder>/structure/<版>/）を読む。
  *
- * 形式は Tyggja の structure と同じで、正本は Tyggja のリポジトリの schema/ と README にある。
+ * 形式は Tyggja の structure と同じで、正本は Hefti（@yanqirenshi/hefti）の JSON Schema にある。
  * 読むときの決まり:
  *   - 知らないプロパティは無視する（Melta が、要素に origin や note を足すため）
  *   - ID は名前で、位置を表す番号ではない。並び順は、配列の順で決まる

@@ -71,7 +71,7 @@ npm run booklet -- set <slug> --edition <版>
 
 ### 本の内容の形式
 
-- 形式は、Tyggja の `structure/`（`index.json` とセクション単位のファイル）と同じです。形式の正本は、Tyggja のリポジトリの `schema/` と README です。
+- 形式は、Tyggja の `structure/`（`index.json` とセクション単位のファイル）と同じです。形式の正本は、[Hefti](https://github.com/yanqirenshi/Hefti)（`@yanqirenshi/hefti`）の JSON Schema です。
 - 本文の 1 ページは、分けたファイル 1 つです。URL は `/books/{slug}/{ファイルの先頭のセクションの ID}`（例 `/books/lunyu/s3`）で、小さい子のセクションは、同じページの中に見出し付きで並びます。
 - センテンスが本文の正本です。画面では、段落としてつなげて見せます。
 
